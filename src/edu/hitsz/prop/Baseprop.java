@@ -1,23 +1,15 @@
-package edu.hitsz.bullet;
+package edu.hitsz.prop;
 
+import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.application.Main;
 import edu.hitsz.basic.AbstractFlyingObject;
 
-/**
- * 子弹类。
- * 也可以考虑不同类型的子弹
- *
- * @author hitsz
- */
-public abstract class BaseBullet extends AbstractFlyingObject {
-
-    private int power = 10;
-
-    public BaseBullet(int locationX, int locationY, int speedX, int speedY, int power) {
+public abstract class Baseprop extends AbstractFlyingObject {
+    public Baseprop(int locationX, int locationY, int speedX, int speedY) {
         super(locationX, locationY, speedX, speedY);
-        this.power = power;
-    }
 
+
+    }
     @Override
     public void forward() {
         super.forward();
@@ -35,11 +27,9 @@ public abstract class BaseBullet extends AbstractFlyingObject {
             // 向上飞行出界
             vanish();
         }
-    }
 
-    public int getPower() {
-        return power;
-    }
 
+    }
+    public abstract void apply(HeroAircraft heroAircraft);
 
 }
