@@ -14,8 +14,8 @@ import java.util.List;
  *
  * @author hitsz
  */
-public class MobEnemy extends AbstractAircraft {
-
+public class MobEnemy extends AbstractEnemy{
+    private int score=10;
     public MobEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
     }
@@ -34,5 +34,7 @@ public class MobEnemy extends AbstractAircraft {
         return new LinkedList<>();
     }
 
-
+    public int getScore() {
+        return score;
+    }
 }

@@ -30,6 +30,6 @@ public abstract class Baseprop extends AbstractFlyingObject {
 
 
     }
-    public abstract void apply(HeroAircraft heroAircraft);
+    public abstract void apply();
 
 }

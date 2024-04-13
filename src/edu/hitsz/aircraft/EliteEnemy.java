@@ -7,10 +7,10 @@ import edu.hitsz.bullet.EnemyBullet;
 import java.util.LinkedList;
 import java.util.List;
 
-public class EliteEnemy extends AbstractAircraft {
+public class EliteEnemy extends AbstractEnemy {
     private int shootNum= 4;
     private int direction=1;
-
+    private int score=20;
     private int hp = 5;
     public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
@@ -42,5 +42,7 @@ public class EliteEnemy extends AbstractAircraft {
         return res;
     }
 
-
+    public int getScore() {
+        return score;
+    }
 }

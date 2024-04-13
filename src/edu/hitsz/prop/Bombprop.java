@@ -7,7 +7,7 @@ public class Bombprop extends Baseprop{
         super(locationX, locationY, speedX, speedY);
 
     }
-    public void apply(HeroAircraft heroAircraft)
+    public void apply()
     {
         System.out.println("BombSupply active!");
     }

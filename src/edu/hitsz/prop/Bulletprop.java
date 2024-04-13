@@ -9,7 +9,7 @@ public class Bulletprop extends Baseprop{
 
     }
 
-    public void apply(HeroAircraft heroAircraft)
+    public void apply()
     {
         System.out.println("FireSupply" +
                 "active!");

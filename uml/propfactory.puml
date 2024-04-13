@@ -1,0 +1,82 @@
+@startuml
+'https://plantuml.com/class-diagram
+title 工厂模式
+'class HeroAircraft {
+'    - shootNum:int
+'    - power:int
+'    - direction:int
+'    -{static}instance:HeroAircraft
+'    - HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+'    + forward():void
+'    + shoot():List<BaseBullet>
+'    +getinstance(int locationX, int locationY, int speedX, int speedY, int hp);
+'}
+
+
+class PropFactory {
+    - locationX: int
+    - locationY: int
+    - speedX: int
+    - speedY: int
+    - enemy: AbstractEnemy
+
+    + PropFactory()
+    + init(enemy: AbstractEnemy): void
+    {abstract} + createprop(): Baseprop
+}
+class BulletpropFactory {
+    + createprop(): Bulletprop
+}
+class BloodpropFactory {
+    + createprop(): Bloodprop
+}
+class BombpropFactory {
+    + createprop(): Bombprop
+}
+abstract class Baseprop {
++Baseprop(int locationX, int locationY, int speedX, int speedY):void
++forward():void
++{abstract}apply():void
+}
+
+
+class Bloodprop {
+- blood:int
++Bloodprop(int locationX, int locationY, int speedX, int speedY):void
++forward():void
++apply():void
++init():HeroAircraft
+}
+
+class  Bombprop {
++ Bombprop(int locationX, int locationY, int speedX, int speedY):void
++forward():void
++apply():void
+}
+
+
+class  Bulletprop  {
++  Bulletprop(int locationX, int locationY, int speedX, int speedY):void
++forward():void
++apply():void
+}
+
+PropFactory <|-- BulletpropFactory
+PropFactory <|-- BombpropFactory
+PropFactory <|-- BloodpropFactory
+Baseprop <|.. PropFactory
+Baseprop <|-- Bulletprop
+Baseprop <|-- Bombprop
+Baseprop <|-- Bloodprop
+Bloodprop <.. BloodpropFactory:create
+Bombprop <.. BombpropFactory:create
+Bulletprop <.. BulletpropFactory:create
+
+
+
+
+
+
+
+
+@enduml

@@ -33,11 +33,16 @@ public class Game extends JPanel {
     private int timeInterval = 40;
 
     private final HeroAircraft heroAircraft;
-    private final List<AbstractAircraft> enemyAircrafts;
+    private final List<AbstractEnemy> enemyAircrafts;
     private final List<BaseBullet> heroBullets;
     private final List<BaseBullet> enemyBullets;
-
     private final List<Baseprop> props;
+
+    private MobEnemyFactory mobfactory=new MobEnemyFactory();
+    private EliteEnemyFactory elitefactory=new EliteEnemyFactory();
+    private BloodpropFactory bloodfactory=new BloodpropFactory();
+    private BombpropFactory bombfactory= new BombpropFactory();
+    private BulletpropFactory bulletfactory=new BulletpropFactory();
 
     /**
      * 屏幕中出现的敌机最大数量
@@ -66,7 +71,7 @@ public class Game extends JPanel {
     private boolean gameOverFlag = false;
 
     public Game() {
-        heroAircraft = new HeroAircraft(
+        heroAircraft = HeroAircraft.getInstance(
                 Main.WINDOW_WIDTH / 2,
                 Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
                 0, 0, 1000);
@@ -108,20 +113,11 @@ public class Game extends JPanel {
 
                 if (enemyAircrafts.size() < enemyMaxNumber) {
                     if(rand>0.5){
-                    enemyAircrafts.add(new MobEnemy(
-                            (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth())),
-                            (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
-                            0,
-                            5,
-                            30
-                    ));}
-                    else{   enemyAircrafts.add(new EliteEnemy(
-                            (int) (Math.random() * (Main.WINDOW_WIDTH - ImageManager.MOB_ENEMY_IMAGE.getWidth())),
-                            (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
-                            0,
-                            5,
-                            30
-                    ));}
+                        enemyAircrafts.add(mobfactory.createEnemy());
+
+                    }
+                    else{
+                        enemyAircrafts.add(elitefactory.createEnemy());}
                 }
                 // 飞机射出子弹
                 shootAction();
@@ -196,7 +192,7 @@ public class Game extends JPanel {
     }
 
     private void aircraftsMoveAction() {
-        for (AbstractAircraft enemyAircraft : enemyAircrafts) {
+        for (AbstractEnemy enemyAircraft : enemyAircrafts) {
             //enemyAircraft.adjustspeed();
             enemyAircraft.forward();
         }
@@ -230,7 +226,7 @@ public class Game extends JPanel {
             if (bullet.notValid()) {
                 continue;
             }
-            for (AbstractAircraft enemyAircraft : enemyAircrafts) {
+            for (AbstractEnemy enemyAircraft : enemyAircrafts) {
                 if (enemyAircraft.notValid()) {
                     // 已被其他子弹击毁的敌机，不再检测
                     // 避免多个子弹重复击毁同一敌机的判定
@@ -243,16 +239,27 @@ public class Game extends JPanel {
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
                         // TODO 获得分数，产生道具补给
-                        score += 10;
+                        score += enemyAircraft.getScore();
                         if(enemyAircraft instanceof EliteEnemy)
                         {Random rand=new Random();
                         double randouble=rand.nextDouble();
-                        Factoryprop factory=new Factoryprop(enemyAircraft);
-                        if(randouble>0.5)
-                        {props.add(factory.Produceprop());}}
+                        //Factoryprop factory=new Factoryprop(enemyAircraft);
+                            //System.out.println(randouble);
+                        if(randouble<0.1)
+                        {  bloodfactory.init(enemyAircraft);
+                            props.add(bloodfactory.createprop().connect(heroAircraft));}
+                        else if (randouble<0.2) {
+                            bombfactory.init(enemyAircraft);
+                            props.add(bombfactory.createprop());
+                        } else if (randouble<0.3) {
+                            bulletfactory.init(enemyAircraft);
+                            props.add(bulletfactory.createprop());
+                        }
+                        else{;}
+                        }
 
 
-                    }
+                        }
 
                 }
                 // 英雄机 与 敌机 相撞，均损毁
@@ -270,7 +277,7 @@ public class Game extends JPanel {
             if(prop.crash(heroAircraft)||heroAircraft.crash(prop))
             {
                 prop.vanish();
-                prop.apply(heroAircraft);
+                prop.apply();
 
             }
         }

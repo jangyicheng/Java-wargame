@@ -37,15 +37,24 @@ abstract class AbstractAircraft
  }
 
 
+'class HeroAircraft {
+'    - shootNum:int
+'    - power:int
+'    - direction:int
+'    + HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+'    + forward():void
+'    + shoot():List<BaseBullet>
+'}
 class HeroAircraft {
     - shootNum:int
     - power:int
     - direction:int
-    + HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+    -{static}instance:HeroAircraft
+    - HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
     + forward():void
     + shoot():List<BaseBullet>
+    +getinstance(int locationX, int locationY, int speedX, int speedY, int hp);
 }
-
 
 AbstractAircraft <|-- HeroAircraft
 
@@ -86,7 +95,7 @@ class EnemyBullet {
 abstract class Baseprop {
 +Baseprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
-+{abstract}apply(HeroAircraft heroAircraft):void
++{abstract}apply():void
 }
 
 
@@ -94,20 +103,20 @@ class Bloodprop {
 - blood:int
 +Bloodprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
-+apply(HeroAircraft heroAircraft):void
++apply():void
 }
 
 class  Bombprop {
 + Bombprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
-+apply(HeroAircraft heroAircraft):void
++apply():void
 }
 
 
 class  Bulletprop  {
 +  Bulletprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
-+apply(HeroAircraft heroAircraft):void
++apply():void
 }
 
 

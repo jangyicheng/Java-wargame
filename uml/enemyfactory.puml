@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/class-diagram
+title 工厂模式
+abstract class AbstractAircraft
+{
+	# maxHp:int
+    # hp:int
+    + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+    + decreaseHp(int decrease):void
+    + getHp():int
+    + getMaxHp():int
+    + {abstract} shoot():List<BaseBullet>
+ }
+
+abstract class AbstractEnemy extends AbstractAircraft {
+  - score: int
+
+  + getScore(): int
+}
+
+class EliteEnemy extends AbstractEnemy {
+  - shootNum: int
+  - direction: int
+  - hp: int
+  - score: int
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + forward(): void
+  + shoot(): List<BaseBullet>
+  + getScore(): int
+}
+class MobEnemy extends AbstractEnemy {
+  - score: int
+  + MobEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + forward(): void
+  + shoot(): List<BaseBullet>
+  + getScore(): int
+}
+abstract class EnemyFactory {
+    +EnemyFactory()
+    +{abstract}createEnemy() : AbstractEnemy
+}
+class EliteEnemyFactory extends EnemyFactory{
+    +createEnemy() : EliteEnemy
+}
+class MobEnemyFactory extends EnemyFactory{
+    +createEnemy() : MobEnemy
+}
+EnemyFactory <.. AbstractEnemy
+EliteEnemy<.. EliteEnemyFactory:create
+MobEnemy<.. MobEnemyFactory:create
+@enduml
