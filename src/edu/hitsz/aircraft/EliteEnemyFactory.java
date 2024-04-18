@@ -12,7 +12,7 @@ public class EliteEnemyFactory extends EnemyFactory {
                     (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
                     0,
                     5,
-                    30
+                    100
             );
         }
     }

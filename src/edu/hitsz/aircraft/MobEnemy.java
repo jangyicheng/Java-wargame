@@ -37,4 +37,5 @@ public class MobEnemy extends AbstractEnemy{
     public int getScore() {
         return score;
     }
+    public void adjustspeed(){;}
 }

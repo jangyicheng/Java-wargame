@@ -40,6 +40,8 @@ public class Game extends JPanel {
 
     private MobEnemyFactory mobfactory=new MobEnemyFactory();
     private EliteEnemyFactory elitefactory=new EliteEnemyFactory();
+    private BossEnemyFactory bossfactory=new BossEnemyFactory();
+    private EliteplusEnemyFactory eliteplusfactory=new EliteplusEnemyFactory();
     private BloodpropFactory bloodfactory=new BloodpropFactory();
     private BombpropFactory bombfactory= new BombpropFactory();
     private BulletpropFactory bulletfactory=new BulletpropFactory();
@@ -64,17 +66,14 @@ public class Game extends JPanel {
      */
     private int cycleDuration = 600;
     private int cycleTime = 0;
-
+    private boolean bosswar = false;
     /**
      * 游戏结束标志
      */
     private boolean gameOverFlag = false;
 
     public Game() {
-        heroAircraft = HeroAircraft.getInstance(
-                Main.WINDOW_WIDTH / 2,
-                Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
-                0, 0, 1000);
+        heroAircraft = HeroAircraft.getInstance();
 
         enemyAircrafts = new LinkedList<>();
         heroBullets = new LinkedList<>();
@@ -103,29 +102,19 @@ public class Game extends JPanel {
         Runnable task = () -> {
 
             time += timeInterval;
-
-            Random random = new Random();
-            double rand = random.nextDouble();
             // 周期性执行（控制频率）
             if (timeCountAndNewCycleJudge()) {
                 System.out.println(time);
                 // 新敌机产生
-
-                if (enemyAircrafts.size() < enemyMaxNumber) {
-                    if(rand>0.5){
-                        enemyAircrafts.add(mobfactory.createEnemy());
-
-                    }
-                    else{
-                        enemyAircrafts.add(elitefactory.createEnemy());}
-                }
+                    createEnemy();
+//                }
                 // 飞机射出子弹
                 shootAction();
             }
 
             // 子弹移动
             bulletsMoveAction();
-
+            adjustspeed();
             // 飞机移动
             aircraftsMoveAction();
 
@@ -203,7 +192,34 @@ public class Game extends JPanel {
         prop.forward();
     }
     }
+    //我添加的
+    private  void createEnemy()
+    {
+        Random random = new Random();
+        double rand = random.nextDouble();
+        if(score>200 & bosswar==false)
+        {bosswar=true;
+            enemyAircrafts.add(bossfactory.createEnemy());}
+        if (enemyAircrafts.size() < enemyMaxNumber) {
+            if(rand>0.2){
+                enemyAircrafts.add(mobfactory.createEnemy());
 
+            }
+            else if(rand>0.7){
+                enemyAircrafts.add(elitefactory.createEnemy());}
+            else
+            {enemyAircrafts.add(eliteplusfactory.createEnemy());}
+            createEnemy();
+        }
+    }
+    private void adjustspeed(){
+        for (AbstractEnemy enemyAircraft : enemyAircrafts) {
+            if(enemyAircraft instanceof EliteplusEnemy||enemyAircraft instanceof BossEnemy)
+            {
+                enemyAircraft.adjustspeed();
+            }
+        }
+    }
     /**
      * 碰撞检测：
      * 1. 敌机攻击英雄
@@ -243,8 +259,7 @@ public class Game extends JPanel {
                         if(enemyAircraft instanceof EliteEnemy)
                         {Random rand=new Random();
                         double randouble=rand.nextDouble();
-                        //Factoryprop factory=new Factoryprop(enemyAircraft);
-                            //System.out.println(randouble);
+
                         if(randouble<0.1)
                         {  bloodfactory.init(enemyAircraft);
                             props.add(bloodfactory.createprop().connect(heroAircraft));}
@@ -257,6 +272,7 @@ public class Game extends JPanel {
                         }
                         else{;}
                         }
+
 
 
                         }

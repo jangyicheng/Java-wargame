@@ -14,7 +14,20 @@ class HeroAircraft {
 class user
 {
 }
+note left of HeroAircraft::getinstance
+    public  static HeroAircraft getInstance(int locationX, int locationY, int speedX, int speedY, int hp)
+    {
+        if(instance==null)
+        {synchronized (HeroAircraft.class)
+        {
+            if(instance==null)
+                instance=new HeroAircraft(locationX, locationY, speedX, speedY, hp);
+        }
+        }
+        return instance;
 
+    }
+end note
 
 
 

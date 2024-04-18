@@ -1,6 +1,8 @@
 package edu.hitsz.aircraft;
 
 
+import edu.hitsz.application.ImageManager;
+import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.HeroBullet;
 
@@ -22,12 +24,13 @@ public class HeroAircraft extends AbstractAircraft{
     /**
      * 子弹伤害
      */
-    private int power = 20;
+    private int power = 40;
 
     /**
      * 子弹射击方向 (向上发射：1，向下发射：-1)
      */
     private int direction = -2;
+
 
     /**
      * @param locationX 英雄机位置x坐标
@@ -39,13 +42,15 @@ public class HeroAircraft extends AbstractAircraft{
 
     private volatile static HeroAircraft instance;
 
-    public  static HeroAircraft getInstance(int locationX, int locationY, int speedX, int speedY, int hp)
+    public  static HeroAircraft getInstance()
     {
         if(instance==null)
         {synchronized (HeroAircraft.class)
         {
             if(instance==null)
-                instance=new HeroAircraft(locationX, locationY, speedX, speedY, hp);
+                instance=new HeroAircraft(Main.WINDOW_WIDTH / 2,
+                        Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
+                        0, 0, 1000);
         }
         }
         return instance;
@@ -71,8 +76,7 @@ public class HeroAircraft extends AbstractAircraft{
         int x = this.getLocationX();
         int y = this.getLocationY() + direction*2;
         int speedX = 0;
-        int speedY = this.getSpeedY() + direction*5;
-
+        int speedY = this.getSpeedY() + direction*6;
         BaseBullet bullet;
         for(int i=0; i<shootNum; i++){
             // 子弹发射位置相对飞机位置向前偏移
