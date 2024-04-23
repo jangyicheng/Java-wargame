@@ -26,6 +26,7 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
 
     public void decreaseHp(int decrease){
         hp -= decrease;
+        hp=Math.min(hp,maxHp);
         if(hp <= 0){
             hp=0;
             vanish();
@@ -46,11 +47,6 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
      *  非可射击对象空实现，返回null
      */
     public abstract List<BaseBullet> shoot();
-    public void setspeed(int speedx,int speedy)
-    {
-        this.speedX=speedx;
-        this.speedY=speedy;
-    }
 
 
 }

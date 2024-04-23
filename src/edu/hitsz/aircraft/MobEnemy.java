@@ -4,6 +4,7 @@ import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.bullet.HeroBullet;
+import edu.hitsz.prop.Baseprop;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,4 +39,7 @@ public class MobEnemy extends AbstractEnemy{
         return score;
     }
     public void adjustspeed(){;}
+
+    public void createprop(List<Baseprop> props, HeroAircraft heroAircraft)
+    {}
 }

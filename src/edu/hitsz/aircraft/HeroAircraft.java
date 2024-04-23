@@ -24,7 +24,7 @@ public class HeroAircraft extends AbstractAircraft{
     /**
      * 子弹伤害
      */
-    private int power = 40;
+    private int power = 400;
 
     /**
      * 子弹射击方向 (向上发射：1，向下发射：-1)
@@ -42,7 +42,7 @@ public class HeroAircraft extends AbstractAircraft{
 
     private volatile static HeroAircraft instance;
 
-    public  static HeroAircraft getInstance()
+    public  static synchronized HeroAircraft getInstance()
     {
         if(instance==null)
         {synchronized (HeroAircraft.class)
@@ -50,7 +50,7 @@ public class HeroAircraft extends AbstractAircraft{
             if(instance==null)
                 instance=new HeroAircraft(Main.WINDOW_WIDTH / 2,
                         Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
-                        0, 0, 1000);
+                        0, 0, 10000);
         }
         }
         return instance;
@@ -66,7 +66,8 @@ public class HeroAircraft extends AbstractAircraft{
         // 英雄机由鼠标控制，不通过forward函数移动
     }
 
-    @Override
+
+        @Override
     /**
      * 通过射击产生子弹
      * @return 射击出的子弹List
@@ -83,6 +84,7 @@ public class HeroAircraft extends AbstractAircraft{
             // 多个子弹横向分散
             bullet = new HeroBullet(x + (i*2 - shootNum + 1)*10, y, speedX, speedY, power);
             res.add(bullet);
+
         }
         return res;
     }

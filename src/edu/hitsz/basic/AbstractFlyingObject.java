@@ -168,10 +168,6 @@ public abstract class AbstractFlyingObject {
     public void vanish() {
         isValid = false;
     }
-    public void setspeed(int x, int y)
-    {
-        speedX=x;
-        speedY=y;
-    };
+
 }
 

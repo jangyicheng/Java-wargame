@@ -17,8 +17,8 @@ public abstract class PropFactory {
         this.enemy=enemy;
         this.locationX = enemy.getLocationX();
         this.locationY = enemy.getLocationY();
-        this.speedX = enemy.getSpeedX();
-        this.speedY = enemy.getSpeedY();
+        this.speedX = 0;
+        this.speedY = Math.max(enemy.getSpeedY(),5);
     }
     public abstract Baseprop createprop();
 

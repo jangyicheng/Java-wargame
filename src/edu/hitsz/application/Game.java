@@ -42,9 +42,9 @@ public class Game extends JPanel {
     private EliteEnemyFactory elitefactory=new EliteEnemyFactory();
     private BossEnemyFactory bossfactory=new BossEnemyFactory();
     private EliteplusEnemyFactory eliteplusfactory=new EliteplusEnemyFactory();
-    private BloodpropFactory bloodfactory=new BloodpropFactory();
-    private BombpropFactory bombfactory= new BombpropFactory();
-    private BulletpropFactory bulletfactory=new BulletpropFactory();
+//    private BloodpropFactory bloodfactory=new BloodpropFactory();
+//    private BombpropFactory bombfactory= new BombpropFactory();
+//    private BulletpropFactory bulletfactory=new BulletpropFactory();
 
     /**
      * 屏幕中出现的敌机最大数量
@@ -171,18 +171,18 @@ public class Game extends JPanel {
 
     private void bulletsMoveAction() {
         for (BaseBullet bullet : heroBullets) {
-            //bullet.adjustspeed();
+
             bullet.forward();
         }
         for (BaseBullet bullet : enemyBullets) {
-            //bullet.adjustsetspeed();
+
             bullet.forward();
         }
     }
 
     private void aircraftsMoveAction() {
         for (AbstractEnemy enemyAircraft : enemyAircrafts) {
-            //enemyAircraft.adjustspeed();
+
             enemyAircraft.forward();
         }
     }
@@ -197,19 +197,20 @@ public class Game extends JPanel {
     {
         Random random = new Random();
         double rand = random.nextDouble();
-        if(score>200 & bosswar==false)
-        {bosswar=true;
+
+        if(score>200 & bosswar==false & rand<0.2)
+        {   bosswar=true;
             enemyAircrafts.add(bossfactory.createEnemy());}
         if (enemyAircrafts.size() < enemyMaxNumber) {
-            if(rand>0.2){
+            if(rand>0.5){
                 enemyAircrafts.add(mobfactory.createEnemy());
 
             }
-            else if(rand>0.7){
+            else if(rand>0.1){
                 enemyAircrafts.add(elitefactory.createEnemy());}
             else
             {enemyAircrafts.add(eliteplusfactory.createEnemy());}
-            createEnemy();
+
         }
     }
     private void adjustspeed(){
@@ -220,6 +221,9 @@ public class Game extends JPanel {
             }
         }
     }
+
+
+
     /**
      * 碰撞检测：
      * 1. 敌机攻击英雄
@@ -254,28 +258,16 @@ public class Game extends JPanel {
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
+                        if(enemyAircraft instanceof BossEnemy)
+                        {bosswar=false;}
                         // TODO 获得分数，产生道具补给
                         score += enemyAircraft.getScore();
-                        if(enemyAircraft instanceof EliteEnemy)
-                        {Random rand=new Random();
-                        double randouble=rand.nextDouble();
-
-                        if(randouble<0.1)
-                        {  bloodfactory.init(enemyAircraft);
-                            props.add(bloodfactory.createprop().connect(heroAircraft));}
-                        else if (randouble<0.2) {
-                            bombfactory.init(enemyAircraft);
-                            props.add(bombfactory.createprop());
-                        } else if (randouble<0.3) {
-                            bulletfactory.init(enemyAircraft);
-                            props.add(bulletfactory.createprop());
-                        }
-                        else{;}
+                        enemyAircraft.createprop(props,heroAircraft);
                         }
 
 
 
-                        }
+
 
                 }
                 // 英雄机 与 敌机 相撞，均损毁
@@ -346,7 +338,31 @@ public class Game extends JPanel {
 
         g.drawImage(ImageManager.HERO_IMAGE, heroAircraft.getLocationX() - ImageManager.HERO_IMAGE.getWidth() / 2,
                 heroAircraft.getLocationY() - ImageManager.HERO_IMAGE.getHeight() / 2, null);
+        for (AbstractEnemy enemy:enemyAircrafts)
+        {
+            BufferedImage image = enemy.getImage();
+            int barWidth = image.getWidth(); // 血条宽度与飞行物图片宽度相同
+            int barHeight = 5; // 血条高度
+            int barX = enemy.getLocationX() - barWidth / 2; // 血条横坐标与飞行物中心对齐
+            int barY = enemy.getLocationY() - image.getHeight() / 2 - barHeight ; // 血条纵坐标在飞行物上方一段距离
 
+            double healthRatio = (double) enemy.getHp() / enemy.getMaxHp(); // 血量比例
+            int barFillWidth = (int) (barWidth * healthRatio); // 血条填充的宽度
+
+            // 绘制血条背景
+            g.setColor(Color.GRAY);
+            g.fillRect(barX, barY, barWidth, barHeight);
+
+            // 绘制血条
+            if(healthRatio<0.5){
+            g.setColor(Color.RED);
+           }
+            else
+            {
+                g.setColor(Color.GREEN);
+            }
+            g.fillRect(barX, barY, barFillWidth, barHeight);
+        }
         //绘制得分和生命值
         paintScoreAndLife(g);
 
@@ -363,7 +379,9 @@ public class Game extends JPanel {
             assert image != null : objects.getClass().getName() + " has no image! ";
             g.drawImage(image, object.getLocationX() - image.getWidth() / 2,
                     object.getLocationY() - image.getHeight() / 2, null);
+
         }
+
     }
 
 

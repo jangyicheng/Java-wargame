@@ -1,8 +1,13 @@
 package edu.hitsz.aircraft;
+import java.util.Random;
 import java.util.stream.DoubleStream;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
+import edu.hitsz.prop.Baseprop;
+import edu.hitsz.prop.BloodpropFactory;
+import edu.hitsz.prop.BombpropFactory;
+import edu.hitsz.prop.BulletpropFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +17,9 @@ public class EliteEnemy extends AbstractEnemy {
     private int direction=1;
     private int score=20;
     private int hp = 5;
-
+    private static BloodpropFactory bloodfactory = new BloodpropFactory();
+    private static BombpropFactory bombfactory = new BombpropFactory();
+    private static BulletpropFactory bulletfactory = new BulletpropFactory();
     public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
     }
@@ -49,4 +56,19 @@ public class EliteEnemy extends AbstractEnemy {
         return score;
     }
     public void adjustspeed(){;}
+    public void createprop(List<Baseprop> props, HeroAircraft heroAircraft) {
+        Random rand = new Random();
+        double randouble = rand.nextDouble();
+
+        if (randouble < 0.1) {
+            bloodfactory.init(this);
+            props.add(bloodfactory.createprop().connect(heroAircraft));
+        } else if (randouble < 0.2) {
+            bombfactory.init(this);
+            props.add(bombfactory.createprop());
+        } else if (randouble < 0.3) {
+            bulletfactory.init(this);
+            props.add(bulletfactory.createprop());
+        }
+    }
 }
