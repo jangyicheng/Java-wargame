@@ -1,5 +1,4 @@
 package edu.hitsz.DAO;
-import edu.hitsz.strategy.NullStrategy;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -15,11 +14,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.time.temporal.ChronoUnit;
-import java.time.Instant;
-import java.time.ZoneId;
+
 
 public class RankList implements DAO{
-    List<Record> ranklist = new ArrayList<>();
+    List<Record> ranklist;
+    public RankList(){ranklist = new ArrayList<>();}
     private String DataPath = "data.csv";
     Comparator<Record> comparatorbyid = new Comparator<Record>() {
         @Override
@@ -92,15 +91,13 @@ public class RankList implements DAO{
                 writer.write(line);
                 writer.newLine();
             }
-
-            System.out.println("CSV 文件写入成功！");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     private Record parseRecord(String str){
         String[] fields = str.split(",");
-        // 假设字段顺序为 id, rank, score, time
+        // 字段顺序为rank,id score, time
         String id = fields[1].trim();
         int rank = Integer.parseInt(fields[0].trim());
         int score = Integer.parseInt(fields[2].trim());
@@ -113,15 +110,7 @@ public class RankList implements DAO{
         return new Record(-1,userid, score,LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
     }
 
-//    @Override
-//    public Record getRecordById(String id) {//查数据
-//        loadRecord();
-//        for(Record record:ranklist)
-//        {if(record.getId().equals(id))
-//        return record;
-//        }
-//        return null;
-//    }
+
     public List<Record> getRecordsById(String id) {
         loadRecord();
         List<Record> matchingRecords = new ArrayList<>();
@@ -131,22 +120,21 @@ public class RankList implements DAO{
                 matchingRecords.add(record);
             }
         }
-        for (Record record:matchingRecords)
-        {
-            System.out.println(record);
-        }
         return matchingRecords;
     }
     @Override
     public void updateRecord(Record record){//用当前排行榜更新文件
         int rank=1;
         loadRecord();//读取文件
+        int score1;
+        int score2=record.getScore();
         for(Record record_:ranklist)//修改排行
-        {if(record_.getScore()<record.getScore())
+        {score1=record_.getScore();
+            if(score1<score2)//当前分数值较小，则名次+1
         record_.setRank(record_.getRank()+1);
-        else if(record_.getScore()>record.getScore())
-        {rank++;}
-        else {;}}
+        else if(score1>score2)
+        {rank++;}//否则新增记录的名次+1
+        }
         record.setRank(rank);
         ranklist.add(record);
         sort("score");//重新排序
@@ -156,14 +144,13 @@ public class RankList implements DAO{
     @Override
     public void deleteRecord(String id) {
         loadRecord();
-        // 实现删除记录的逻辑
         List<Record> records=getRecordsById(id);
         for(Record record:records)
         {   ranklist.remove(record);
             for(Record record_:ranklist)
             {if(record_.getScore()<record.getScore())
-                record_.setRank(record_.getRank()+1);
-            else {;}}}
+                record_.setRank(record_.getRank()-1);
+            }}
 
         writeRecord();
     }
@@ -194,17 +181,5 @@ public class RankList implements DAO{
         Collections.sort(ranklist, comparator);
     }
 
-    public static void main(String[] args) {
-        int []scores={1,2,3,4,5,6,7,8,9};
-        LocalDateTime time = LocalDateTime.now();
-        RankList rankList=new RankList();
-        for (int score:scores)
-        { Record record=rankList.createRecord("username",score);
-            rankList.updateRecord(record);
-        }
-        //rankList.deleteRecord("username");
-        rankList.printRecord();
-
-    }
 
 }

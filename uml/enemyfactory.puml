@@ -35,14 +35,14 @@ class MobEnemy extends AbstractEnemy {
   + shoot(): List<BaseBullet>
   + getScore(): int
 }
-abstract class EnemyFactory {
+interface EnemyFactory {
     +EnemyFactory()
-    +{abstract}createEnemy() : AbstractEnemy
+    +createEnemy() : AbstractEnemy
 }
-class EliteEnemyFactory extends EnemyFactory{
+class EliteEnemyFactory implements EnemyFactory{
     +createEnemy() : EliteEnemy
 }
-class MobEnemyFactory extends EnemyFactory{
+class MobEnemyFactory implements EnemyFactory{
     +createEnemy() : MobEnemy
 }
 EnemyFactory <.. AbstractEnemy

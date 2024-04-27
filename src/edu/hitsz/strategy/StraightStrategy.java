@@ -26,7 +26,8 @@ public class StraightStrategy implements Strategy{
         locationY=aircraft.getLocationY();
         power=aircraft.getPower();
         speedX=aircraft.getSpeedX();
-        speedY=aircraft.getSpeedY();
+        //speedY=aircraft.getSpeedY()+direction*6;
+        speedY=10;
         direction=aircraft.getDirection();
         shootNum=aircraft.getShootnum();
         List<BaseBullet> res = new LinkedList<>();
@@ -39,7 +40,7 @@ public class StraightStrategy implements Strategy{
             if(aircraft instanceof AbstractEnemy)
                 bullet = new EnemyBullet(x , y, speedX, speedY, power);
             else
-            { bullet = new HeroBullet(x , y, speedX, speedY, power);}
+            { bullet = new HeroBullet(x , y, speedX, -speedY, power);}
             res.add(bullet);
         }
         return res;

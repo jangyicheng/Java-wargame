@@ -14,7 +14,7 @@ public class ScatterStrategy implements Strategy{
     private int locationY;
     private int speedX;
     private int speedY;
-    private int speed=5;
+    private int speed=10;
     private int shootNum;
     private int power;
 
@@ -27,7 +27,7 @@ public class ScatterStrategy implements Strategy{
         power=aircraft.getPower();
         speedX=aircraft.getSpeedX();
         speedY=aircraft.getSpeedY();
-        shootNum=aircraft.getShootnum();
+        shootNum=3;
 
         List<BaseBullet> res = new LinkedList<>();
         int x = this.locationX;
@@ -43,7 +43,7 @@ public class ScatterStrategy implements Strategy{
             if(aircraft instanceof AbstractEnemy)
             bullet = new EnemyBullet(x , y, speedX, speedY, power);
             else
-            { bullet = new HeroBullet(x , y, speedX, speedY, power);}
+            { bullet = new HeroBullet(x , y, speedX, -speedY, power);}
             res.add(bullet);
         }
         return res;

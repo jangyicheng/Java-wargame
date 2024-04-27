@@ -14,7 +14,6 @@ public class EliteEnemyFactory implements EnemyFactory {
                     5,
                     100
             );
-            eliteEnemy.setStrategy("Straight");
             return eliteEnemy;
         }
     }

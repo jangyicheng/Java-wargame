@@ -13,7 +13,7 @@ public class BossEnemyFactory implements  EnemyFactory{
                 0,
                 10000
         );
-        bossEnemy.setStrategy("Circular");
+
         return bossEnemy;
     }
 }

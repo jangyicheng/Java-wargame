@@ -10,16 +10,13 @@ public class Bulletprop extends Baseprop{
 
 
     }
-//    public Bulletprop connect(HeroAircraft heroAircraft)
-//    {
-//        this.heroAircraft=heroAircraft;
-//        return this;
-//    }
+
 
     public void apply()
     {
         heroAircraft.setStrategy("Scatter");
         System.out.println("FireSupply" +
                 "active!");
+
     }
 }

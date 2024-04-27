@@ -5,6 +5,7 @@ import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.bullet.HeroBullet;
 import edu.hitsz.prop.Baseprop;
+import edu.hitsz.strategy.NullStrategy;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,9 +17,11 @@ import java.util.List;
  * @author hitsz
  */
 public class MobEnemy extends AbstractEnemy{
-    private int score=10;
+
     public MobEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
+        this.score=10;
+        strategy=new NullStrategy();
     }
 
     @Override
@@ -40,6 +43,6 @@ public class MobEnemy extends AbstractEnemy{
     }
     public void adjustspeed(){;}
 
-    public void createprop(List<Baseprop> props, HeroAircraft heroAircraft)
+    public void createprop(List<Baseprop> props)
     {}
 }

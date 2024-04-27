@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface Strategy {
     List<BaseBullet> shoot(AbstractAircraft aircraft);
-//    void init();
 }

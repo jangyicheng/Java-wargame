@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
-
+import javax.swing.JOptionPane;
 /**
  * 游戏主面板，游戏启动
  *
@@ -135,7 +135,8 @@ public class Game extends JPanel {
                 executorService.shutdown();
                 gameOverFlag = true;
                 System.out.println("Game Over!");
-                Record record=rankList.createRecord("username",score);
+
+                Record record=rankList.createRecord(getUsername(),score);
                 rankList.updateRecord(record);
                 rankList.printRecord();
             }
@@ -168,14 +169,14 @@ public class Game extends JPanel {
     private void shootAction() {
         // TODO 敌机射击
         for (AbstractAircraft enemy : enemyAircrafts) {
-            enemyBullets.addAll(enemy.strategy.shoot(enemy));
+            //enemyBullets.addAll(enemy.strategy.shoot(enemy));
 
             enemyBullets.addAll(enemy.shoot());}
             // 英雄射击
-            heroBullets.addAll(heroAircraft.strategy.shoot(heroAircraft));
-            // heroBullets.addAll(heroAircraft.shoot());
-        }
+           // heroBullets.addAll(heroAircraft.strategy.shoot(heroAircraft));
+          heroBullets.addAll(heroAircraft.shoot());
 
+    }
     private void bulletsMoveAction() {
         for (BaseBullet bullet : heroBullets) {
             bullet.forward();
@@ -266,7 +267,7 @@ public class Game extends JPanel {
                         {bosswar=false;}
                         // TODO 获得分数，产生道具补给
                         score += enemyAircraft.getScore();
-                        enemyAircraft.createprop(props,heroAircraft);
+                        enemyAircraft.createprop(props);
                         }
                 }
                 // 英雄机 与 敌机 相撞，均损毁
@@ -392,6 +393,12 @@ public class Game extends JPanel {
         y = y + 20;
         g.drawString("LIFE:" + this.heroAircraft.getHp(), x, y);
     }
+
+
+    public static String getUsername() {
+            String username = JOptionPane.showInputDialog(null, "请输入您的姓名:", "输入姓名", JOptionPane.PLAIN_MESSAGE);
+            return username;
+        }
 
 
 }

@@ -5,21 +5,27 @@ import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.prop.*;
+import edu.hitsz.strategy.CircularStrategy;
+import edu.hitsz.strategy.StraightStrategy;
+import edu.hitsz.strategy.Strategy;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class EliteEnemy extends AbstractEnemy {
-    private int shootNum= 1;
-    private int direction=1;
-    private int score=20;
-    private int power=10;
+
+    //public Strategy strategy=new StraightStrategy();
     private static BloodpropFactory bloodfactory = new BloodpropFactory();
     private static BombpropFactory bombfactory = new BombpropFactory();
     private static BulletpropFactory bulletfactory = new BulletpropFactory();
     private static BulletpluspropFactory bulletplusfactory = new BulletpluspropFactory();
     public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
+        shootNum= 1;
+        direction=1;
+         score=20;
+         power=10;
+        strategy=new StraightStrategy();
     }
 
     @Override
@@ -33,28 +39,14 @@ public class EliteEnemy extends AbstractEnemy {
 
     @Override
     public List<BaseBullet> shoot() {
-        List<BaseBullet> res = new LinkedList<>();
-        int x = this.getLocationX() ;
-        int y = this.getLocationY() + direction*2;
-        int speedX = 0;
-        int speedY = this.getSpeedY() + direction*5;
-        BaseBullet bullet;
-
-        for(int i=0; i<shootNum; i++){
-            // 子弹发射位置相对飞机位置向前偏移
-            // 多个子弹横向分散
-
-            bullet = new EnemyBullet(x , y, speedX, speedY, power);
-            res.add(bullet);
-        }
-        return res;
+        return this.strategy.shoot(this);
     }
 
     public int getScore() {
         return score;
     }
     public void adjustspeed(){;}
-    public void createprop(List<Baseprop> props, HeroAircraft heroAircraft) {
+    public void createprop(List<Baseprop> props) {
         Random rand = new Random();
         double randouble = rand.nextDouble();
 

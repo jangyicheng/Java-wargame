@@ -13,7 +13,6 @@ public class EliteplusEnemyFactory implements EnemyFactory{
                 4,
                 200
         );
-        eliteplusEnemy.setStrategy("Scatter");
         return  eliteplusEnemy;
     }
 }

@@ -13,7 +13,7 @@ public class CircularStrategy implements Strategy{
     private int locationX;
     private int locationY;
     private int shootNum;
-    private int speed=5;
+    private int speed;
     private int power;
     public CircularStrategy(){}
 
@@ -22,7 +22,8 @@ public class CircularStrategy implements Strategy{
     {        locationX=aircraft.getLocationX();
         locationY=aircraft.getLocationY();
         power=aircraft.getPower();
-        shootNum=aircraft.getShootnum();
+        speed=10;
+        shootNum=20;
         List<BaseBullet> res = new LinkedList<>();
         int x = this.locationX;
         int y = this.locationY;//+ direction*20;
@@ -43,7 +44,7 @@ public class CircularStrategy implements Strategy{
             if(aircraft instanceof AbstractEnemy)
                 bullet = new EnemyBullet(x , y, speedx, speedy, power);
             else
-            { bullet = new HeroBullet(x , y, speedx, speedy, power);}
+            { bullet = new HeroBullet(x , y, speedx, -speedy, power);}
             res.add(bullet);
         }
         return res;

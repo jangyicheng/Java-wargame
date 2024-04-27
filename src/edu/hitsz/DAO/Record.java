@@ -6,7 +6,7 @@ public class Record {
     private int score;
     private LocalDateTime time;
     public Record(int rank,String userid,int score,LocalDateTime time)
-    {
+    {this.rank=rank;
     this.userid=userid;
     this.time=time;
     this.score=score;}
