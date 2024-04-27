@@ -4,22 +4,20 @@ import java.util.stream.DoubleStream;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
-import edu.hitsz.prop.Baseprop;
-import edu.hitsz.prop.BloodpropFactory;
-import edu.hitsz.prop.BombpropFactory;
-import edu.hitsz.prop.BulletpropFactory;
+import edu.hitsz.prop.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class EliteEnemy extends AbstractEnemy {
-    private int shootNum= 20;
+    private int shootNum= 1;
     private int direction=1;
     private int score=20;
-    private int hp = 5;
+    private int power=10;
     private static BloodpropFactory bloodfactory = new BloodpropFactory();
     private static BombpropFactory bombfactory = new BombpropFactory();
     private static BulletpropFactory bulletfactory = new BulletpropFactory();
+    private static BulletpluspropFactory bulletplusfactory = new BulletpluspropFactory();
     public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
     }
@@ -46,7 +44,7 @@ public class EliteEnemy extends AbstractEnemy {
             // 子弹发射位置相对飞机位置向前偏移
             // 多个子弹横向分散
 
-            bullet = new EnemyBullet(x , y, speedX, speedY, hp);
+            bullet = new EnemyBullet(x , y, speedX, speedY, power);
             res.add(bullet);
         }
         return res;
@@ -62,13 +60,17 @@ public class EliteEnemy extends AbstractEnemy {
 
         if (randouble < 0.1) {
             bloodfactory.init(this);
-            props.add(bloodfactory.createprop().connect(heroAircraft));
+            props.add(bloodfactory.createprop());
         } else if (randouble < 0.2) {
             bombfactory.init(this);
             props.add(bombfactory.createprop());
         } else if (randouble < 0.3) {
             bulletfactory.init(this);
             props.add(bulletfactory.createprop());
+        }
+        else if (randouble < 0.4) {
+            bulletplusfactory.init(this);
+            props.add(bulletplusfactory.createprop());
         }
     }
 }

@@ -1,5 +1,4 @@
 package edu.hitsz.aircraft;
-
 import edu.hitsz.basic.AbstractFlyingObject;
 import edu.hitsz.prop.BulletpropFactory;
 import java.util.HashSet;

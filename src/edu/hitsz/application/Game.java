@@ -1,5 +1,7 @@
 package edu.hitsz.application;
 
+import edu.hitsz.DAO.RankList;
+import edu.hitsz.DAO.Record;
 import edu.hitsz.aircraft.*;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
@@ -9,6 +11,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
@@ -42,15 +45,11 @@ public class Game extends JPanel {
     private EliteEnemyFactory elitefactory=new EliteEnemyFactory();
     private BossEnemyFactory bossfactory=new BossEnemyFactory();
     private EliteplusEnemyFactory eliteplusfactory=new EliteplusEnemyFactory();
-//    private BloodpropFactory bloodfactory=new BloodpropFactory();
-//    private BombpropFactory bombfactory= new BombpropFactory();
-//    private BulletpropFactory bulletfactory=new BulletpropFactory();
 
     /**
      * 屏幕中出现的敌机最大数量
      */
     private int enemyMaxNumber = 5;
-
     /**
      * 当前得分
      */
@@ -59,7 +58,6 @@ public class Game extends JPanel {
      * 当前时刻
      */
     private int time = 0;
-
     /**
      * 周期（ms)
      * 指示子弹的发射、敌机的产生频率
@@ -67,10 +65,12 @@ public class Game extends JPanel {
     private int cycleDuration = 600;
     private int cycleTime = 0;
     private boolean bosswar = false;
+    private boolean gameOverFlag=false;
     /**
      * 游戏结束标志
      */
-    private boolean gameOverFlag = false;
+    private RankList rankList=new RankList();
+
 
     public Game() {
         heroAircraft = HeroAircraft.getInstance();
@@ -114,10 +114,11 @@ public class Game extends JPanel {
 
             // 子弹移动
             bulletsMoveAction();
-            adjustspeed();
             // 飞机移动
             aircraftsMoveAction();
-
+            // 横向移动
+            adjustspeed();
+            //道具移动
             propsMoveAction();
             // 撞击检测
             crashCheckAction();
@@ -134,6 +135,9 @@ public class Game extends JPanel {
                 executorService.shutdown();
                 gameOverFlag = true;
                 System.out.println("Game Over!");
+                Record record=rankList.createRecord("username",score);
+                rankList.updateRecord(record);
+                rankList.printRecord();
             }
 
         };
@@ -163,26 +167,26 @@ public class Game extends JPanel {
 
     private void shootAction() {
         // TODO 敌机射击
-        for(AbstractAircraft enemy:enemyAircrafts){
-        enemyBullets.addAll(enemy.shoot());}
-        // 英雄射击
-        heroBullets.addAll(heroAircraft.shoot());
-    }
+        for (AbstractAircraft enemy : enemyAircrafts) {
+            enemyBullets.addAll(enemy.strategy.shoot(enemy));
+
+            enemyBullets.addAll(enemy.shoot());}
+            // 英雄射击
+            heroBullets.addAll(heroAircraft.strategy.shoot(heroAircraft));
+            // heroBullets.addAll(heroAircraft.shoot());
+        }
 
     private void bulletsMoveAction() {
         for (BaseBullet bullet : heroBullets) {
-
             bullet.forward();
         }
         for (BaseBullet bullet : enemyBullets) {
-
             bullet.forward();
         }
     }
 
     private void aircraftsMoveAction() {
         for (AbstractEnemy enemyAircraft : enemyAircrafts) {
-
             enemyAircraft.forward();
         }
     }
@@ -264,11 +268,6 @@ public class Game extends JPanel {
                         score += enemyAircraft.getScore();
                         enemyAircraft.createprop(props,heroAircraft);
                         }
-
-
-
-
-
                 }
                 // 英雄机 与 敌机 相撞，均损毁
                 if (enemyAircraft.crash(heroAircraft) || heroAircraft.crash(enemyAircraft)) {
@@ -286,7 +285,6 @@ public class Game extends JPanel {
             {
                 prop.vanish();
                 prop.apply();
-
             }
         }
     }

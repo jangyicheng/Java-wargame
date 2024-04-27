@@ -5,6 +5,7 @@ import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.HeroBullet;
+import edu.hitsz.strategy.Strategy;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class HeroAircraft extends AbstractAircraft{
     /**
      * 子弹伤害
      */
-    private int power = 400;
+    private int power = 40;
 
     /**
      * 子弹射击方向 (向上发射：1，向下发射：-1)
@@ -51,6 +52,7 @@ public class HeroAircraft extends AbstractAircraft{
                 instance=new HeroAircraft(Main.WINDOW_WIDTH / 2,
                         Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
                         0, 0, 10000);
+            instance.setStrategy("Straight");
         }
         }
         return instance;
@@ -72,7 +74,12 @@ public class HeroAircraft extends AbstractAircraft{
      * 通过射击产生子弹
      * @return 射击出的子弹List
      */
+//    public void setStrategy(String str)
+//        {}
+
     public List<BaseBullet> shoot() {
+        //this.strategy.init();
+        //return this.strategy.shoot();
         List<BaseBullet> res = new LinkedList<>();
         int x = this.getLocationX();
         int y = this.getLocationY() + direction*2;

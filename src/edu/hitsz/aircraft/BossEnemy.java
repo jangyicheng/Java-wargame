@@ -3,10 +3,7 @@ package edu.hitsz.aircraft;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
-import edu.hitsz.prop.Baseprop;
-import edu.hitsz.prop.BloodpropFactory;
-import edu.hitsz.prop.BombpropFactory;
-import edu.hitsz.prop.BulletpropFactory;
+import edu.hitsz.prop.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +20,7 @@ public class BossEnemy extends AbstractEnemy {
     private static BloodpropFactory bloodfactory = new BloodpropFactory();
     private static BombpropFactory bombfactory = new BombpropFactory();
     private static BulletpropFactory bulletfactory = new BulletpropFactory();
+    private static BulletpluspropFactory bulletplusfactory = new BulletpluspropFactory();
     public BossEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
     }
@@ -78,15 +76,19 @@ public class BossEnemy extends AbstractEnemy {
             Random rand = new Random();
             double randouble = rand.nextDouble();
 
-            if (randouble < 0.3) {
+            if (randouble < 0.2) {
                 bloodfactory.init(this);
-                props.add(bloodfactory.createprop().connect(heroAircraft));
-            } else if (randouble < 0.6) {
+                props.add(bloodfactory.createprop());
+            } else if (randouble < 0.4) {
                 bombfactory.init(this);
                 props.add(bombfactory.createprop());
-            } else if (randouble < 0.9) {
+            } else if (randouble < 0.6) {
                 bulletfactory.init(this);
                 props.add(bulletfactory.createprop());
+            }
+            else if (randouble < 0.8) {
+                bulletplusfactory.init(this);
+                props.add(bulletplusfactory.createprop());
             }
         }
     }

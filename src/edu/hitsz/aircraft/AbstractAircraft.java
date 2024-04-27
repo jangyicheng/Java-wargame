@@ -2,6 +2,7 @@ package edu.hitsz.aircraft;
 
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
+import edu.hitsz.strategy.*;
 
 import java.util.List;
 
@@ -17,7 +18,10 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
      */
     protected int maxHp;
     protected int hp;
-
+    protected int power=5;
+    protected int shootnum;
+    protected int direction;
+    public Strategy strategy=new StraightStrategy();
     public AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY);
         this.hp = hp;
@@ -39,7 +43,11 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
     public int getMaxHp() {
         return maxHp;
     }
-
+    public int getPower() {
+        return power;
+    }
+    public int getShootnum(){return shootnum;}
+    public int getDirection(){return direction;}
     /**
      * 飞机射击方法，可射击对象必须实现
      * @return
@@ -48,7 +56,21 @@ public abstract class AbstractAircraft extends AbstractFlyingObject {
      */
     public abstract List<BaseBullet> shoot();
 
-
+    public void setStrategy(String str)
+        {
+            if(str.equals("Circular"))
+            {this.strategy=new CircularStrategy();}
+            else if (str.equals("Null")) {
+                this.strategy=new NullStrategy();
+            } else if (str.equals("Scatter")) {
+                this.strategy=new ScatterStrategy();
+            }
+            else if(str.equals("Straight")){
+                this.strategy=new StraightStrategy();
+            }
+            else
+            {throw new RuntimeException("Wrong Strategy!");}
+        }
 }
 
 

@@ -99,6 +99,7 @@ public abstract class AbstractFlyingObject {
      * @return true: 我方被击中; false 我方未被击中
      */
     public boolean crash(AbstractFlyingObject flyingObject) {
+
         // 缩放因子，用于控制 y轴方向区域范围
         int factor = this instanceof AbstractAircraft ? 2 : 1; //我方
         int fFactor = flyingObject instanceof AbstractAircraft ? 2 : 1;//对方
