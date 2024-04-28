@@ -14,7 +14,7 @@ public abstract class AbstractEnemy extends AbstractAircraft{
         return score;
     }
    // abstract public Baseprop createprop();
-    public void adjustspeed(){}
+    public abstract void adjustspeed();
    public  abstract  void createprop(List<Baseprop> props);
 
 }

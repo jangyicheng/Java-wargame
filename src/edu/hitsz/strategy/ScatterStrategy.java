@@ -10,28 +10,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ScatterStrategy implements Strategy{
-    private int locationX;
-    private int locationY;
-    private int speedX;
-    private int speedY;
-    private int speed=10;
-    private int shootNum;
-    private int power;
 
     public ScatterStrategy(){}
 
     public List<BaseBullet> shoot(AbstractAircraft aircraft)
     {
-        locationX=aircraft.getLocationX();
-        locationY=aircraft.getLocationY();
-        power=aircraft.getPower();
-        speedX=aircraft.getSpeedX();
-        speedY=aircraft.getSpeedY();
-        shootNum=3;
+        int locationX=aircraft.getLocationX();
+        int locationY=aircraft.getLocationY();
+        int power=aircraft.getPower();
+        int speedX=aircraft.getSpeedX();
+        int speedY=aircraft.getSpeedY();
+        int shootNum=3;
+        int speed=10;
 
         List<BaseBullet> res = new LinkedList<>();
-        int x = this.locationX;
-        int y = this.locationY;//+ direction*20;
+        int x = locationX;
+        int y = locationY;//+ direction*20;
         BaseBullet bullet;
         double[] angle = {Math.PI/2,3*Math.PI/7,4*Math.PI/7};
 

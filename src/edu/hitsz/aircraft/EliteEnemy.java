@@ -14,7 +14,6 @@ import java.util.List;
 
 public class EliteEnemy extends AbstractEnemy {
 
-    //public Strategy strategy=new StraightStrategy();
     private static BloodpropFactory bloodfactory = new BloodpropFactory();
     private static BombpropFactory bombfactory = new BombpropFactory();
     private static BulletpropFactory bulletfactory = new BulletpropFactory();
@@ -42,9 +41,6 @@ public class EliteEnemy extends AbstractEnemy {
         return this.strategy.shoot(this);
     }
 
-    public int getScore() {
-        return score;
-    }
     public void adjustspeed(){;}
     public void createprop(List<Baseprop> props) {
         Random rand = new Random();

@@ -4,7 +4,7 @@ import edu.hitsz.aircraft.HeroAircraft;
 
 public class Bloodprop extends Baseprop{
     private int blood=50;
-    private HeroAircraft heroAircraft=HeroAircraft.getInstance();
+    //private HeroAircraft heroAircraft=HeroAircraft.getInstance();
     public Bloodprop(int locationX, int locationY, int speedX, int speedY) {
         super(locationX, locationY, speedX, speedY);
 

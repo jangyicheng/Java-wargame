@@ -10,23 +10,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CircularStrategy implements Strategy{
-    private int locationX;
-    private int locationY;
-    private int shootNum;
-    private int speed;
-    private int power;
+
     public CircularStrategy(){}
 
 
     public List<BaseBullet> shoot(AbstractAircraft aircraft)
-    {        locationX=aircraft.getLocationX();
-        locationY=aircraft.getLocationY();
-        power=aircraft.getPower();
-        speed=10;
-        shootNum=20;
+    {
+        int locationX=aircraft.getLocationX();
+        int locationY=aircraft.getLocationY();
+        int power=aircraft.getPower();
+        int speed=10;
+        int shootNum=20;
         List<BaseBullet> res = new LinkedList<>();
-        int x = this.locationX;
-        int y = this.locationY;//+ direction*20;
+        int x = locationX;
+        int y = locationY;//+ direction*20;
         int speedx;
         int speedy;
         BaseBullet bullet;

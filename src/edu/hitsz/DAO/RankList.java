@@ -17,9 +17,10 @@ import java.time.temporal.ChronoUnit;
 
 
 public class RankList implements DAO{
-    List<Record> ranklist;
-    public RankList(){ranklist = new ArrayList<>();}
-    private String DataPath = "data.csv";
+    private List<Record> ranklist;
+    public RankList(){ranklist = new ArrayList<>();
+        DataPath = "data.csv";}
+    private String DataPath ;
     Comparator<Record> comparatorbyid = new Comparator<Record>() {
         @Override
         public int compare(Record o1, Record o2) {
@@ -158,6 +159,7 @@ public class RankList implements DAO{
     @Override
     public void printRecord() {
         loadRecord();
+        System.out.println("得分排行榜:");
         System.out.println("Rank\tUsername\tScore\t\tTime");
         for (Record record : ranklist) {
             System.out.printf("%-5d\t%-15s\t%-10d\t%s%n", record.getRank(), record.getId(), record.getScore(), record.getTime());

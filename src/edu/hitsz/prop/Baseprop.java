@@ -5,9 +5,9 @@ import edu.hitsz.application.Main;
 import edu.hitsz.basic.AbstractFlyingObject;
 
 public abstract class Baseprop extends AbstractFlyingObject {
+    protected HeroAircraft heroAircraft=HeroAircraft.getInstance();
     public Baseprop(int locationX, int locationY, int speedX, int speedY) {
         super(locationX, locationY, speedX, speedY);
-
 
     }
     @Override

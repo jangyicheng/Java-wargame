@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface Strategy{
++shoot(): List<BaseBullet>
+}
+class StraightStrategy implements Strategy{
+ + StraightStrategy()
++shoot(AbstractAircraft aircraft): List<BaseBullet>
+}
+class ScatterStrategy implements Strategy{
+ + ScatterStrategy()
++shoot(AbstractAircraft aircraft): List<BaseBullet>
+}
+class NullStrategy implements Strategy{
+  + NullStrategy()
++shoot(AbstractAircraft aircraft): List<BaseBullet>
+ }
+class CircularStrategy implements Strategy{
+  + CircularStrategy()
++shoot(AbstractAircraft aircraft): List<BaseBullet>
+ }
+ abstract class AbstractAircraft
+ {
+        -LocationX:int
+             -LocationY:int
+     -power: int
+     -shootNum: int
+     -direction: int
+     -strategy: Strategy
+     + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+     + {abstract} shoot():List<BaseBullet>
+     + setStrategy(String str):void
+     +getPower():int
+      +getDirection():int
+      +getLocationX():int
+     +getLocationY():int
+  }
+  class game
+  {
+  }
+
+  AbstractAircraft o-- Strategy
+ AbstractAircraft <--    game
+  CircularStrategy <.. game
+  ScatterStrategy <.. game
+StraightStrategy <.. game
+    NullStrategy <.. game
+
+      footer 由于AbstractAircraft中的其他方法和属性没有用到，故在这里不多赘述
+@enduml

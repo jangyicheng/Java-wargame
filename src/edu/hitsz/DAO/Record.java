@@ -23,10 +23,6 @@ public class Record {
         return userid;
     }
 
-    public void setName(String userid) {
-        this.userid = userid;
-    }
-
     public int getScore() {
         return score;
     }
@@ -37,10 +33,6 @@ public class Record {
 
     public LocalDateTime getTime() {
         return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
     }
 
     @Override

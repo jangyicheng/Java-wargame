@@ -24,53 +24,58 @@ class PropFactory {
     + init(enemy: AbstractEnemy): void
     {abstract} + createprop(): Baseprop
 }
-class BulletpropFactory {
+class BulletpropFactory extends PropFactory{
     + createprop(): Bulletprop
 }
-class BloodpropFactory {
+class BulletpluspropFactory extends PropFactory{
+    + createprop(): Bulletprop
+}
+class BloodpropFactory extends PropFactory{
     + createprop(): Bloodprop
 }
-class BombpropFactory {
+class BombpropFactory extends PropFactory{
     + createprop(): Bombprop
 }
 abstract class Baseprop {
+#heroaircraft:Heroaircraft
 +Baseprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +{abstract}apply():void
 }
 
 
-class Bloodprop {
+class Bloodprop extends Baseprop{
 - blood:int
 +Bloodprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void
-+init():HeroAircraft
 }
 
-class  Bombprop {
+class  Bombprop extends Baseprop{
 + Bombprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void
 }
 
 
-class  Bulletprop  {
+class  Bulletprop extends Baseprop{
 +  Bulletprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void
 }
 
-PropFactory <|-- BulletpropFactory
-PropFactory <|-- BombpropFactory
-PropFactory <|-- BloodpropFactory
-Baseprop <|.. PropFactory
-Baseprop <|-- Bulletprop
-Baseprop <|-- Bombprop
-Baseprop <|-- Bloodprop
+class  Bulletplusprop extends Baseprop{
++  Bulletplusprop(int locationX, int locationY, int speedX, int speedY):void
++forward():void
++apply():void
+}
+
+
+Baseprop <.. PropFactory
 Bloodprop <.. BloodpropFactory:create
 Bombprop <.. BombpropFactory:create
 Bulletprop <.. BulletpropFactory:create
+Bulletplusprop <.. BulletpluspropFactory:create
 
 
 

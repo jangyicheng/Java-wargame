@@ -1,0 +1,54 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class DAOpatternDemo
+{
+}
+
+interface DAO
+{
+  +createRecord(userid: String, score: int): Record
+    +getRecordsById(userid: String): List<Record>
+    +updateRecord(record: Record): void
+    +deleteRecord(userid: String): void
+    +printRecord(): void
+}
+
+class RankList implements DAO
+{
+-ranklist:List<Record>
++RankList()
+- DataPath:String
+- comparatorbyscore:Comparator<Record>
+- comparatorbytime:Comparator<Record>
+- comparatorbyid:Comparator<Record>
+- comparatorbyrank:Comparator<Record>
+
++createRecord():Record
++getRecordsById(String id):List<Record>
++updateRecord(Record record):void
++deleteRecord(String id):void
++printRecord():void
++sort(String by):void
+-loadRecord():void
+-writeRecord():void
+-parseRecord():Record
+}
+
+class Record
+{
+    -rank:int
+    - userid:String
+    - score:int
+    -time:LocalDateTime
+    -Record()
+    +getRank(): int
+    +setRank(rank: int): void
+    +getId(): String
+    +getScore(): int
+    +setScore(score: int): void
+    +getTime(): LocalDateTime
+}
+DAO<.. DAOpatternDemo
+ Record<-- RankList
+@enduml

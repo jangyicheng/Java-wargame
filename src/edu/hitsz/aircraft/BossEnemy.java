@@ -14,7 +14,6 @@ import java.util.Random;
 public class BossEnemy extends AbstractEnemy {
 
 
-    private int speed = 8 + speedY;
 
     //public Strategy strategy=new CircularStrategy();
     private static BloodpropFactory bloodfactory = new BloodpropFactory();

@@ -15,8 +15,6 @@ import java.util.Random;
 public class EliteplusEnemy extends AbstractEnemy{
 
 
-    private int speed =9;
-    //public Strategy strategy=new ScatterStrategy();
     private double startx;
     private static BloodpropFactory bloodfactory = new BloodpropFactory();
     private static BombpropFactory bombfactory = new BombpropFactory();
