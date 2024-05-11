@@ -1,19 +1,32 @@
 package edu.hitsz.prop;
 
-import edu.hitsz.aircraft.HeroAircraft;
+import edu.hitsz.Music.MusicThread;
 
-public class Bulletplusprop extends Baseprop{
-    //private HeroAircraft heroAircraft=HeroAircraft.getInstance();
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class Bulletplusprop extends Baseprop {
+
     public Bulletplusprop(int locationX, int locationY, int speedX, int speedY) {
         super(locationX, locationY, speedX, speedY);
-
-
     }
 
-    public void apply()
-    {
+    @Override
+    public void apply() {
+
+
         heroAircraft.setStrategy("Circular");
-        System.out.println("FireplusSupply" +
-                "active!");
+        System.out.println("FireplusSupply active!");
+
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                heroAircraft.setStrategy("Straight");
+            }
+        }, 5000); // 5秒后执行
     }
+
+
 }

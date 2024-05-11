@@ -40,8 +40,8 @@ class CircularStrategy implements Strategy{
   {
   }
 
-  AbstractAircraft o-- Strategy
- AbstractAircraft <--    game
+  AbstractAircraft o--> Strategy
+  AbstractAircraft <--  game
   CircularStrategy <.. game
   ScatterStrategy <.. game
 StraightStrategy <.. game

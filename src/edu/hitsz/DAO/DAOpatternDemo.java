@@ -5,8 +5,8 @@ import java.util.List;
 public class DAOpatternDemo {
 
     public static void main(String[] args) {
-        int[] scores = {1000, 200, 300};
-        RankList rankList = new RankList();
+        int[] scores = {1000, 200, 300,300};
+        RankList rankList = new RankList(0);
         //演示更新
         for (int score : scores) {
             //演示新增记录
