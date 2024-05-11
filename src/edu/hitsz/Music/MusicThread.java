@@ -23,6 +23,10 @@ public class MusicThread extends Thread {
     private AudioFormat audioFormat;
     private byte[] samples;
     private int mode;//为0时静音，为1时正常播放，为2时循环播放
+
+    private final Object lock = new Object();
+    // 标志变量，用于控制线程的暂停和恢复
+    private boolean paused = false;
     public MusicThread(String filename) {
         //初始化filename
         this.filename = filename;
@@ -65,46 +69,58 @@ public class MusicThread extends Thread {
         return samples;
     }
 
-    public void play(InputStream source) {
-        int size = (int) (audioFormat.getFrameSize() * audioFormat.getSampleRate());
-        byte[] buffer = new byte[size];
-        //源数据行SoureDataLine是可以写入数据的数据行
-        SourceDataLine dataLine = null;
-        //获取受数据行支持的音频格式DataLine.info
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
-        try {
-            dataLine = (SourceDataLine) AudioSystem.getLine(info);
-            dataLine.open(audioFormat, size);
-        } catch (LineUnavailableException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        dataLine.start();
-        try {
-            int numBytesRead = 0;
-            while (numBytesRead != -1) {
-                //从音频流读取指定的最大数量的数据字节，并将其放入缓冲区中
-                numBytesRead =
-                        source.read(buffer, 0, buffer.length);
-                //通过此源数据行将数据写入混频器
+
+public void play(InputStream source){
+    int size = (int) (audioFormat.getFrameSize() * audioFormat.getSampleRate());
+    byte[] buffer = new byte[size];
+    SourceDataLine dataLine = null;
+    DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
+    try {
+        dataLine = (SourceDataLine) AudioSystem.getLine(info);
+        dataLine.open(audioFormat, size);
+    } catch (LineUnavailableException e) {
+        e.printStackTrace();
+    }
+    dataLine.start();
+    int numBytesRead = 0;
+    try {
+            while ((numBytesRead != -1 && mode != 0) || (mode == 2 && numBytesRead == -1)) {//线程不死或循环播放阶段
+                synchronized (lock) {
+                    while (paused) {
+                        try {
+                            lock.wait(); // 线程进入等待状态
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                numBytesRead = source.read(buffer, 0, buffer.length);
+                if (mode == 0)
+                    try {
+                        // 停止运行，并等待信号
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 if (numBytesRead != -1) {
                     dataLine.write(buffer, 0, numBytesRead);
                 }
-                //重复播放
-                if (numBytesRead == -1 && mode==2) {
+                if (numBytesRead == -1 && mode == 2) {
+                    // 重新播放音频
                     source.reset();
-                    numBytesRead = source.read(buffer, 0, buffer.length);
+                    numBytesRead = 0;
                 }
-            }
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            //}
         }
-
-        dataLine.drain();
-        dataLine.close();
-
+    }catch(IOException  e) {
+        e.printStackTrace();
     }
+    dataLine.drain();
+    dataLine.close();
+    }
+
+
+
     public void setMode(int mode)
     {
         this.mode=mode;
@@ -112,8 +128,21 @@ public class MusicThread extends Thread {
     @Override
     public void run() {
         InputStream stream = new ByteArrayInputStream(samples);
-        if(mode!=0)
-            play(stream);
+        play(stream);
+    }
+    // 暂停线程
+    public void pauseThread() {
+        synchronized (lock) {
+            paused = true;
+        }
+    }
+
+    // 恢复线程
+    public void resumeThread() {
+        synchronized (lock) {
+            paused = false;
+            lock.notify(); // 唤醒正在等待的线程
+        }
     }
 }
 

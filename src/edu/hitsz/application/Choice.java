@@ -14,7 +14,7 @@ public class Choice extends JFrame {
     // 构造函数
     public Choice(Integer mode, Boolean sound, ChoiceCallback callback) {
         this.callback = callback;
-        setTitle("Swing Window Example");
+        setTitle("飞机大战");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 500);
         setLocationRelativeTo(null);
@@ -51,7 +51,6 @@ public class Choice extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedMode = (String) modeComboBox.getSelectedItem();
-                System.out.println("Button 1 clicked. Selected mode: " + selectedMode);
                 callback.onChoiceConfirmed(1,selectedMode.equals("开"));
                 dispose();
             }
@@ -61,7 +60,6 @@ public class Choice extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedMode = (String) modeComboBox.getSelectedItem();
-                System.out.println("Button 2 clicked. Selected mode: " + selectedMode);
                 callback.onChoiceConfirmed(2,selectedMode.equals("开"));
                 dispose();
             }
@@ -71,7 +69,6 @@ public class Choice extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedMode = (String) modeComboBox.getSelectedItem();
-                System.out.println("Button 3 clicked. Selected mode: " + selectedMode);
                 Mode=3;
                 callback.onChoiceConfirmed(3,selectedMode.equals("开"));
                 dispose();

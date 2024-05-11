@@ -11,7 +11,7 @@ public class Bombprop extends Baseprop{
     }
     public void apply()
     {
-
+        new MusicThread("src/videos/bomb_explosion.wav").start();
         System.out.println("BombSupply active!");
     }
 }

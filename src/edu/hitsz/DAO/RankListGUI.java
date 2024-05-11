@@ -13,32 +13,41 @@ public class RankListGUI extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
     private RankList rankList;
-    private int mode;
+    private String mode;
     public RankListGUI(int mode) {
-        this.mode=mode;
+        if(mode==1)
+            this.mode="简单模式";
+        else if(mode==2)
+            this.mode="普通模式";
+        else if(mode==3)
+            this.mode="困难模式";
         initialize();
         rankList=new RankList(mode);
         loadRankData();
     }
 
     private void initialize() {
-        setTitle("Rank List");
+        setTitle("排行榜");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);
 
+        setLayout(new FlowLayout());
+
         tableModel = new DefaultTableModel(new Object[]{"Rank", "ID", "Score", "Time"}, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
-        getContentPane().add(scrollPane, BorderLayout.CENTER);
+        add(scrollPane);
+
         JButton deleteButton = new JButton("删除");
+        deleteButton.setBounds(300, 700, 100, 60);
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteSelectedRow();
             }
         });
-        getContentPane().add(deleteButton, BorderLayout.SOUTH);
+        add(deleteButton);
         JButton exitButton = new JButton("退出");
         exitButton.addActionListener(new ActionListener() {
             @Override
@@ -46,9 +55,8 @@ public class RankListGUI extends JFrame {
                 System.exit(0);
             }
         });
-        getContentPane().add(exitButton, BorderLayout.NORTH);
+        add(exitButton);
     }
-
     private void loadRankData() {
         clearTable();
         List<Record> records = rankList.getRankList();
