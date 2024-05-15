@@ -55,7 +55,7 @@ public class HeroAircraft extends AbstractAircraft{
         /**
          * 子弹伤害
          */
-        power = 40;
+        power = 50;
         /**
          * 子弹射击方向 (向上发射：1，向下发射：-1)
          */
@@ -69,19 +69,13 @@ public class HeroAircraft extends AbstractAircraft{
         // 英雄机由鼠标控制，不通过forward函数移动
     }
 
-
         @Override
     /**
      * 通过射击产生子弹
      * @return 射击出的子弹List
      */
-//    public void setStrategy(String str)
-//        {}
-
     public List<BaseBullet> shoot() {
-
         return this.strategy.shoot(this);
-
     }
 
 

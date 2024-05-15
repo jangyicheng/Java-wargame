@@ -14,20 +14,21 @@ import java.util.Random;
 
 public class EliteplusEnemy extends AbstractEnemy{
 
-
     private double startx;
     private static BloodpropFactory bloodfactory = new BloodpropFactory();
     private static BombpropFactory bombfactory = new BombpropFactory();
     private static BulletpropFactory bulletfactory = new BulletpropFactory();
     private static BulletpluspropFactory bulletplusfactory = new BulletpluspropFactory();
-    public EliteplusEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
-        super(locationX, locationY, speedX, speedY, hp);
+    public EliteplusEnemy(int locationX, int locationY, int speedX, int speedY, int hp,int mode,int time) {
+        super(locationX, locationY, speedX, speedY, hp,mode,time);
         startx=locationX+40*(locationX< Main.WINDOW_HEIGHT*0.5?1:-1);
         shootNum= 3;
          direction=1;
          score=40;
          power=10;
         strategy=new ScatterStrategy();
+        setMode(mode);
+        enforce(time);
     }
 
     @Override
@@ -43,7 +44,6 @@ public class EliteplusEnemy extends AbstractEnemy{
     public List<BaseBullet> shoot() {
         return this.strategy.shoot(this);
     }
-
     public int getScore() {
         return score;
     }
@@ -69,4 +69,35 @@ public class EliteplusEnemy extends AbstractEnemy{
             }
 
     }
+    public void update()
+    {
+        this.decreaseHp(50);
+    }
+    private void enforce(int time)
+    {
+        //生命值提升
+        this.hp=Math.min(time/1000+this.hp,400);
+        setMaxHp(this.hp);
+        //速度提升
+        this.speedY=Math.min(time/1000+this.speedY,8);
+
+    }
+
+    public void setMode(int mode)
+    {
+        if(mode==1)
+        {
+
+        }
+        else if(mode==2)
+        {
+            this.hp+=50;
+        }
+        else if(mode==3)
+        {
+            this.hp+=100;
+        }
+        setMaxHp(this.hp);
+    }
+
 }

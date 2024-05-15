@@ -1,0 +1,56 @@
+@startuml
+
+class  Bombprop extends Baseprop{
+-observers:List<Observer>
++ Bombprop(int locationX, int locationY, int speedX, int speedY):void
++forward():void
++apply():void
++registerObserver(Observer observer):void
++removeObserver(Observer observer):void
++notifyObserver():void
+}
+
+interface Observer
+{
++update():void
+}
+abstract class AbstractEnemy implements Observer{
+  - score: int
+  + {abstract}adjustspeed(): void
+  + getScore(): int
+  + {abstract} createprop():void
+  +update():void
+}
+class EliteEnemy extends AbstractEnemy {
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + forward(): void
+  + shoot(): List<BaseBullet>
+  +update():void
+}
+class EliteplusEnemy extends AbstractEnemy {
+  + EliteplusEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + forward(): void
+  + shoot(): List<BaseBullet>
+  +update():void
+}
+class MobEnemy extends AbstractEnemy {
+  + MobEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + forward(): void
+  + shoot(): List<BaseBullet>
+  +update():void
+}
+class BossEnemy extends AbstractEnemy{
+  + BossEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + forward(): void
+  + shoot(): List<BaseBullet>
+  +update():void
+}
+class Game{
+}
+
+Game --> Bombprop
+Bombprop o--> Observer
+Game ..> MobEnemy
+Game ..> EliteEnemy
+Game ..> EliteplusEnemy
+@enduml

@@ -5,8 +5,10 @@ import edu.hitsz.DAO.RankListGUI;
 import edu.hitsz.DAO.Record;
 import edu.hitsz.Music.MusicThread;
 import edu.hitsz.aircraft.*;
+import edu.hitsz.aircraft.Observer;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
+import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.prop.*;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
@@ -24,9 +26,7 @@ import javax.swing.JOptionPane;
  * @author hitsz
  */
 public class Game extends JPanel {
-
     private int backGroundTop = 0;
-
     /**
      * Scheduled 线程池，用于任务调度
      */
@@ -56,6 +56,7 @@ public class Game extends JPanel {
      * 当前得分
      */
     private int score = 0;
+    private int tempscore =0;//阶段得分
     /**
      * 当前时刻
      */
@@ -76,7 +77,10 @@ public class Game extends JPanel {
     private BufferedImage background=ImageManager.BACKGROUND_IMAGE1;
     MusicThread music;//=new MusicThread("src/videos/bgm.wav",2);
     MusicThread bgm_boss;//=new MusicThread("src/videos/bgm_boss.wav",2);
-
+    private double mobprob;
+    private double eliteprob;
+    private int bosscore;//boss出现的分数
+    private int bosscount=0;
     public Game() {
         heroAircraft = HeroAircraft.getInstance();
         enemyAircrafts = new LinkedList<>();
@@ -94,8 +98,8 @@ public class Game extends JPanel {
                 new BasicThreadFactory.Builder().namingPattern("game-action-%d").daemon(true).build());
 
         //启动英雄机鼠标监听
-        new HeroController(this, heroAircraft);
-
+       new HeroController(this, heroAircraft);
+        new KeyBoardController(this, heroAircraft);
     }
 
     /**
@@ -110,6 +114,7 @@ public class Game extends JPanel {
             // 周期性执行（控制频率）
             if (timeCountAndNewCycleJudge()) {
                 System.out.println(time);
+                adjustdiff();
                 // 新敌机产生
                 createEnemy();
                 // 飞机射出子弹
@@ -125,7 +130,6 @@ public class Game extends JPanel {
             //道具移动
             propsMoveAction();
             // 撞击检测
-
             crashCheckAction();
             // 后处理
             postProcessAction();
@@ -135,14 +139,11 @@ public class Game extends JPanel {
             // 游戏结束检查英雄机是否存活
             if (heroAircraft.getHp() <= 0) {
                 // 游戏结束
-                //music.setMode(0);
-                //bgm_boss.setMode(0);
                 music.pauseThread();
                 bgm_boss.pauseThread();
                 executorService.shutdown();
                 gameOverFlag = true;
                 System.out.println("Game Over!");
-
                 SwingUtilities.invokeLater(() -> {
                     RankListGUI rankListGUI = new RankListGUI((int)Mode);
                     rankListGUI.setVisible(true);
@@ -162,22 +163,20 @@ public class Game extends JPanel {
                     @Override
                     public void onChoiceConfirmed(Integer mode,Boolean sound) {
                         Mode=mode;
+                        Sound=sound;
                         if(mode.equals(1))
                         background=ImageManager.BACKGROUND_IMAGE1;
                         else if (mode.equals(2)) {
                             background=ImageManager.BACKGROUND_IMAGE2;
                         }
-                        else {background=ImageManager.BACKGROUND_IMAGE3;}
-                        Sound=sound;
+                        else{background=ImageManager.BACKGROUND_IMAGE3;}
+                        setMode();
                         executorService.scheduleWithFixedDelay(task, timeInterval, timeInterval, TimeUnit.MILLISECONDS);
                         if(Sound) {
                             executorService.execute(music);
                             executorService.execute(bgm_boss);
                             bgm_boss.pauseThread();
-
-
                         }
-
                     }
                 });
                 window.setVisible(true);
@@ -233,23 +232,24 @@ public class Game extends JPanel {
     private  void createEnemy(){
         Random random = new Random();
         double rand = random.nextDouble();
-        System.out.println(music.isInterrupted());
-        if(score>200 & bosswar==false & rand<0.1)
+        if(tempscore>bosscore & bosswar==false & rand<0.2 & Mode!=1)
         {   bosswar=true;
-            //executorService.execute(bgm_boss);
+            bosscount++;
+            tempscore=0;//清空临时分数
             music.pauseThread();
             bgm_boss.resumeThread();
             enemyAircrafts.add(bossfactory.createEnemy());}
         if (enemyAircrafts.size() < enemyMaxNumber) {
-            if(rand>0.5){
+            if(rand>mobprob){
                 enemyAircrafts.add(mobfactory.createEnemy());
             }
-            else if(rand>0.1){
+            else if(rand>eliteprob){
                 enemyAircrafts.add(elitefactory.createEnemy());}
             else
             {enemyAircrafts.add(eliteplusfactory.createEnemy());}
 
         }
+
     }
     private void adjustspeed(){
         for (AbstractEnemy enemyAircraft : enemyAircrafts) {
@@ -302,11 +302,11 @@ public class Game extends JPanel {
                             bosswar=false;
                             bgm_boss.pauseThread();
                             music.resumeThread();
-                            System.out.println("After restart");
-                            System.out.println(music.isInterrupted());
                         }
                         // TODO 获得分数，产生道具补给
                         score += enemyAircraft.getScore();
+                        if(bosswar==false)
+                            tempscore += enemyAircraft.getScore();
                         enemyAircraft.createprop(props);
                         }
                 }
@@ -324,6 +324,16 @@ public class Game extends JPanel {
         // Todo: 我方获得道具，道具生效
         for(Baseprop prop: props)
         {
+            if(prop instanceof Bombprop)
+            {
+                for(BaseBullet bullet: enemyBullets)
+                {
+                    ((Bombprop) prop).registerObserver((Observer) bullet);
+                }
+                for(AbstractEnemy enemy:enemyAircrafts) {
+                ((Bombprop) prop).registerObserver(enemy);
+                }
+            }
             if(prop.crash(heroAircraft)||heroAircraft.crash(prop))
             {
                 if (Sound)
@@ -331,7 +341,23 @@ public class Game extends JPanel {
                 prop.vanish();
                 prop.apply();
             }
+            if(prop instanceof Bombprop)
+            {
+                for(BaseBullet bullet: enemyBullets)
+                {
+                    ((Bombprop) prop).removeObserver((Observer) bullet);
+                }
+                for(AbstractEnemy enemy:enemyAircrafts) {
+                    ((Bombprop) prop).removeObserver(enemy);
+                    if(enemy.notValid())
+                    {score+=enemy.getScore();
+                        if(bosswar==false)
+                        tempscore+=enemy.getScore();
+                    }
+                }
+            }
         }
+
     }
 
     /**
@@ -437,10 +463,60 @@ public class Game extends JPanel {
     }
 
 
-    public static String getUsername() {
-            String username = JOptionPane.showInputDialog(null, "请输入您的姓名:", "输入姓名", JOptionPane.PLAIN_MESSAGE);
-            return username;
+    private void setMode()
+    {
+        mobfactory.setMode(Mode);
+        elitefactory.setMode(Mode);
+        eliteplusfactory.setMode(Mode);
+        bossfactory.setMode(Mode);
+
+        //可以调整难度的方式：
+        //血量、敌机攻速、速度：传入工厂进行修改
+        //敌机最大数量，精英敌机产生概率,boss机得分阈值，直接修改
+        if(Mode.equals(1))
+        {enemyMaxNumber=5;
+        mobprob=0.5;
+        eliteprob=0.1;
+        bosscore=200;
+        }
+        else if(Mode.equals(2))
+        {enemyMaxNumber=7;
+            mobprob=0.5;
+            eliteprob=0.15;
+            bosscore=300;
+        }
+        else if(Mode.equals(3))
+        {enemyMaxNumber=9;
+            mobprob=0.5;
+            eliteprob=0.2;
+            bosscore=400;
         }
 
+    }
+    private void adjustdiff()
+    {
+        if(Mode.equals(1))
+        {
+        }
+        else if(Mode.equals(2))
+        {
+            if(time%1000==0)
+            {mobfactory.adjust(time);
+                elitefactory.adjust(time);
+                eliteplusfactory.adjust(time);
+                enemyMaxNumber=Math.max(enemyMaxNumber+time/2000,7);
+            }
+        }
+        else if(Mode.equals(3))
+        {
+            if(time%1000==0)
+            {mobfactory.adjust(time);//敌机属性增强
+            elitefactory.adjust(time);
+            eliteplusfactory.adjust(time);
+            enemyMaxNumber=Math.max(enemyMaxNumber+time/2000,9);//敌机数量增加
+            }
+            bossfactory.adjust(bosscount);//boss血量增加
+        }
 
+    }
 }

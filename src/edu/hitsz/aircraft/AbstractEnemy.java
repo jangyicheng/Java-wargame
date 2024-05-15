@@ -4,16 +4,20 @@ import edu.hitsz.prop.Baseprop;
 
 import java.util.List;
 
-public abstract class AbstractEnemy extends AbstractAircraft{
+public abstract class AbstractEnemy extends AbstractAircraft  implements Observer{
+    private int mode;
+    private int time;
 
-    public AbstractEnemy(int locationX, int locationY, int speedX, int speedY, int hp){
+    protected int score;
+    public AbstractEnemy(int locationX, int locationY, int speedX, int speedY, int hp,int mode,int time){
         super(locationX, locationY, speedX, speedY, hp);
+        this.mode=mode;
+        this.time=time;
     }
-    public int score;
     public int getScore() {
         return score;
     }
-   // abstract public Baseprop createprop();
+
     public abstract void adjustspeed();
    public  abstract  void createprop(List<Baseprop> props);
 

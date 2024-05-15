@@ -1,5 +1,6 @@
 package edu.hitsz.bullet;
 
+import edu.hitsz.aircraft.Observer;
 import edu.hitsz.application.Main;
 import edu.hitsz.basic.AbstractFlyingObject;
 
@@ -9,9 +10,9 @@ import edu.hitsz.basic.AbstractFlyingObject;
  *
  * @author hitsz
  */
-public abstract class BaseBullet extends AbstractFlyingObject {
+public abstract class BaseBullet extends AbstractFlyingObject  {
 
-    private int power = 10;
+    private int power;
 
     public BaseBullet(int locationX, int locationY, int speedX, int speedY, int power) {
         super(locationX, locationY, speedX, speedY);

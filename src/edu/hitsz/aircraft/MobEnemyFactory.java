@@ -5,6 +5,8 @@ import edu.hitsz.application.Main;
 
 public class MobEnemyFactory implements EnemyFactory {
 
+    private int mode;
+    private int time;
         public MobEnemyFactory(){}
         @Override
         public MobEnemy createEnemy() {
@@ -13,9 +15,15 @@ public class MobEnemyFactory implements EnemyFactory {
                     (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
                     0,
                     5,
-                    50
+                    50,mode,time
             );
         }
+    public  void setMode(int mode){this.mode=mode;}
+    public  void adjust(int time)
+    {
+        this.time=time;
     }
+
+}
 
 

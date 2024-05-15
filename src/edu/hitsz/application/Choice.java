@@ -21,7 +21,6 @@ public class Choice extends JFrame {
         // 创建面板
         JPanel panel = new JPanel();
         panel.setLayout(null);
-
         // 创建三个按钮
         JButton button1 = new JButton("简单模式");
         JButton button2 = new JButton("普通模式");
@@ -31,21 +30,18 @@ public class Choice extends JFrame {
         button3.setBounds(125,300,150,80);
         // 创建下拉列表
         modeComboBox = new JComboBox<>(new String[]{"开", "关"});
-        JLabel label = new JLabel("音效:");
-        //label.setBounds(80,300,50,20);
+        modeComboBox.setBounds(125,400,150,30);
+        JLabel label = new JLabel("音效 ：");
+
+        label.setBounds(80,395,40,40);
         // 添加按钮和下拉列表到面板
         panel.add(button1);
         panel.add(button2);
         panel.add(button3);
         panel.add(modeComboBox);
         panel.add(label);
-
-
         // 添加面板到窗口
         getContentPane().add(panel);
-
-        label.setBounds(60,400,25,20);
-        modeComboBox.setBounds(125,400,150,30);
         // 添加按钮的点击事件监听器
         button1.addActionListener(new ActionListener() {
             @Override
@@ -69,7 +65,6 @@ public class Choice extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedMode = (String) modeComboBox.getSelectedItem();
-                Mode=3;
                 callback.onChoiceConfirmed(3,selectedMode.equals("开"));
                 dispose();
             }

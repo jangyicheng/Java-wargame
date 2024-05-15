@@ -18,13 +18,15 @@ public class EliteEnemy extends AbstractEnemy {
     private static BombpropFactory bombfactory = new BombpropFactory();
     private static BulletpropFactory bulletfactory = new BulletpropFactory();
     private static BulletpluspropFactory bulletplusfactory = new BulletpluspropFactory();
-    public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
-        super(locationX, locationY, speedX, speedY, hp);
+    public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp,int mode,int time) {
+        super(locationX, locationY, speedX, speedY, hp,mode,time);
         shootNum= 1;
         direction=1;
          score=20;
          power=10;
         strategy=new StraightStrategy();
+        setMode(mode);
+        enforce(time);
     }
 
     @Override
@@ -60,5 +62,35 @@ public class EliteEnemy extends AbstractEnemy {
             bulletplusfactory.init(this);
             props.add(bulletplusfactory.createprop());
         }
+    }
+    public void update()
+    {
+        this.vanish();
+    }
+    private void enforce(int time)
+    {
+        //生命值提升
+        this.hp=Math.min(time/1000+this.hp,300);
+        setMaxHp(this.hp);
+        //速度提升
+        this.speedY=Math.min(time/1000+this.speedY,8);
+
+    }
+
+    public void setMode(int mode)
+    {
+        if(mode==1)
+        {
+
+        }
+        else if(mode==2)
+        {
+            this.hp+=50;
+        }
+        else if(mode==3)
+        {
+            this.hp+=100;
+        }
+        setMaxHp(this.hp);
     }
 }

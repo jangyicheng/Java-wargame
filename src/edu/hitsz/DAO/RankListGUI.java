@@ -11,9 +11,12 @@ import java.util.Objects;
 
 public class RankListGUI extends JFrame {
     private JTable table;
+    JPanel root;
     private DefaultTableModel tableModel;
     private RankList rankList;
     private String mode;
+    private JComboBox<String> modeComboBox;
+    private  String by;
     public RankListGUI(int mode) {
         if(mode==1)
             this.mode="简单模式";
@@ -25,14 +28,16 @@ public class RankListGUI extends JFrame {
         rankList=new RankList(mode);
         loadRankData();
     }
-
     private void initialize() {
+        root = new JPanel();      //定义面板容器
+        setContentPane(root);
         setTitle("排行榜");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);
-
         setLayout(new FlowLayout());
+//        JPanel panel = new JPanel();
+//        panel.setLayout(null);
 
         tableModel = new DefaultTableModel(new Object[]{"Rank", "ID", "Score", "Time"}, 0);
         table = new JTable(tableModel);
@@ -40,27 +45,51 @@ public class RankListGUI extends JFrame {
         add(scrollPane);
 
         JButton deleteButton = new JButton("删除");
-        deleteButton.setBounds(300, 700, 100, 60);
+        add(deleteButton);
+        //deleteButton.setBounds(300, 700, 100, 60);
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 deleteSelectedRow();
             }
         });
-        add(deleteButton);
+
+
+        modeComboBox = new JComboBox<>(new String[]{"time", "id","score"});
+        add(modeComboBox);
+
+        JButton sortButton = new JButton("排序");
+        add(sortButton);
+        sortButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              sortBy();
+            }
+        });
+
         JButton exitButton = new JButton("退出");
+        add(exitButton);
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
-        add(exitButton);
+
     }
-    private void loadRankData() {
+    private void loadRankData() {//从当前rankList直接读取数据
         clearTable();
         List<Record> records = rankList.getRankList();
-
+        for (Record record : records) {
+            Object[] rowData = new Object[]{record.getRank(), record.getId(), record.getScore(), record.getTime()};
+            tableModel.addRow(rowData);
+        }
+    }
+    private void sortBy()
+    {   by=(String) modeComboBox.getSelectedItem();
+        clearTable();
+        List<Record> records = rankList.getRankList();
+        rankList.sort(by);
         for (Record record : records) {
             Object[] rowData = new Object[]{record.getRank(), record.getId(), record.getScore(), record.getTime()};
             tableModel.addRow(rowData);
@@ -93,7 +122,6 @@ public class RankListGUI extends JFrame {
         rankList.updateRecord(record);
         loadRankData();
     }
-
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {

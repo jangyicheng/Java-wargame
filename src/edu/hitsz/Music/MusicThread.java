@@ -30,7 +30,7 @@ public class MusicThread extends Thread {
     public MusicThread(String filename) {
         //初始化filename
         this.filename = filename;
-        this.mode=1;
+        this.mode=1;//默认为1
         reverseMusic();
     }
     public MusicThread(String filename,int mode) {
