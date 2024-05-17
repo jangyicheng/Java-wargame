@@ -29,24 +29,25 @@ public class RankListGUI extends JFrame {
         loadRankData();
     }
     private void initialize() {
-        root = new JPanel();      //定义面板容器
-        setContentPane(root);
         setTitle("排行榜");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(800, 700);
         setLocationRelativeTo(null);
-        setLayout(new FlowLayout());
-//        JPanel panel = new JPanel();
-//        panel.setLayout(null);
+        setLayout(new BorderLayout());
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(null);
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayout());
 
         tableModel = new DefaultTableModel(new Object[]{"Rank", "ID", "Score", "Time"}, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane);
+        scrollPane.setBounds(100,50,600,500);
+        panel1.add(scrollPane);
 
         JButton deleteButton = new JButton("删除");
-        add(deleteButton);
-        //deleteButton.setBounds(300, 700, 100, 60);
+        //deleteButton.setBounds(350,550,30,30);
+        panel2.add(deleteButton);
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -54,12 +55,13 @@ public class RankListGUI extends JFrame {
             }
         });
 
-
         modeComboBox = new JComboBox<>(new String[]{"time", "id","score"});
-        add(modeComboBox);
+        //modeComboBox.setBounds(400,550,30,30);
+        panel2.add(modeComboBox);
 
         JButton sortButton = new JButton("排序");
-        add(sortButton);
+        //sortButton.setBounds(450,550,30,30);
+        panel2.add(sortButton);
         sortButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -68,13 +70,22 @@ public class RankListGUI extends JFrame {
         });
 
         JButton exitButton = new JButton("退出");
-        add(exitButton);
+        //exitButton.setBounds(500,550,30,30);
+        panel2.add(exitButton);
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
+        JLabel label=new JLabel(this.mode);
+       // label.setBounds(350,20,100,50);
+        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 20)); // 设置标签的字体大小为 20
+        label.setHorizontalAlignment(SwingConstants.CENTER); // 设置标签内容居中对齐
+        add(label, BorderLayout.NORTH);
+        add(panel1, BorderLayout.CENTER); // 将 panel1 添加到中央区域
+        add(panel2, BorderLayout.SOUTH); // 将 panel2 添加到南部区域
+        setVisible(true);
 
     }
     private void loadRankData() {//从当前rankList直接读取数据
@@ -125,7 +136,7 @@ public class RankListGUI extends JFrame {
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {
-            RankListGUI rankListGUI = new RankListGUI(0);
+            RankListGUI rankListGUI = new RankListGUI(2);
             rankListGUI.setVisible(true);
         });
     }

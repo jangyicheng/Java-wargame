@@ -44,6 +44,7 @@ public class HeroAircraft extends AbstractAircraft{
                         Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
                         0, 0, 10000);
             instance.setStrategy("Straight");
+
         }
         }
         return instance;

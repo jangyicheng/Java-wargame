@@ -1,16 +1,6 @@
 @startuml
 'https://plantuml.com/class-diagram
 title 工厂模式
-'class HeroAircraft {
-'    - shootNum:int
-'    - power:int
-'    - direction:int
-'    -{static}instance:HeroAircraft
-'    - HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
-'    + forward():void
-'    + shoot():List<BaseBullet>
-'    +getinstance(int locationX, int locationY, int speedX, int speedY, int hp);
-'}
 
 
 class PropFactory {
@@ -19,7 +9,6 @@ class PropFactory {
     - speedX: int
     - speedY: int
     - enemy: AbstractEnemy
-
     + PropFactory()
     + init(enemy: AbstractEnemy): void
     {abstract} + createprop(): Baseprop
@@ -52,19 +41,24 @@ class Bloodprop extends Baseprop{
 }
 
 class  Bombprop extends Baseprop{
+-observers:List<Observer>
 + Bombprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void
++registerObserver(Observer observer):void
++removeObserver(Observer observer):void
++notifyObserver():void
 }
 
-
 class  Bulletprop extends Baseprop{
+ -{static}control:int
 +  Bulletprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void
 }
 
 class  Bulletplusprop extends Baseprop{
+ -{static}control:int
 +  Bulletplusprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void

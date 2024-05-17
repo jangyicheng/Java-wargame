@@ -17,16 +17,22 @@ abstract class AbstractAircraft
     + getMaxHp():int
     + getShootnum():int
     +getDirection():int
+    + setMaxHp():void
     + getPower():int
     + {abstract} shoot():List<BaseBullet>
     + setStrategy(String str):void
  }
 
-abstract class AbstractEnemy extends AbstractAircraft {
+abstract class AbstractEnemy extends AbstractAircraft implements Observer{
   - score: int
+      -mode:int
+      -time:int
+     + AbstractEnemy(int locationX, int locationY, int speedX, int speedY, int hp,int mode,int time)
   + {abstract}adjustspeed(): void
   + getScore(): int
   + {abstract} createprop():void
+  + {abstract} setMode(int mode):void
+  + {abstract} update():void
 }
 
 class EliteEnemy extends AbstractEnemy {
@@ -34,27 +40,30 @@ class EliteEnemy extends AbstractEnemy {
     -{static}bombfactory: BombpropFactory
     -{static}bulletfactory: BulletpropFactory
     -{static}bulletplusfactory: BulletpluspropFactory
-  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int,int mode,int time)
   + forward(): void
   + shoot(): List<BaseBullet>
+    + update():void
 }
 class EliteplusEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
     -{static}bombfactory: BombpropFactory
     -{static}bulletfactory: BulletpropFactory
     -{static}bulletplusfactory: BulletpluspropFactory
-  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int,int mode,int time)
   + forward(): void
   + shoot(): List<BaseBullet>
+      + update():void
 }
 class MobEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
     -{static}bombfactory: BombpropFactory
     -{static}bulletfactory: BulletpropFactory
     -{static}bulletplusfactory: BulletpluspropFactory
-  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int,int mode,int time)
   + forward(): void
   + shoot(): List<BaseBullet>
+      + update():void
 }
 
 class BossEnemy extends AbstractEnemy{
@@ -62,25 +71,44 @@ class BossEnemy extends AbstractEnemy{
     -{static}bombfactory: BombpropFactory
     -{static}bulletfactory: BulletpropFactory
     -{static}bulletplusfactory: BulletpluspropFactory
-  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int,int mode,int time)
   + forward(): void
   + shoot(): List<BaseBullet>
+      + update():void
 }
 
 interface EnemyFactory {
-    +createEnemy() : AbstractEnemy
+    createEnemy() : AbstractEnemy
+    adjust(int time): void
+    setMode(int mode): void
 }
 class EliteEnemyFactory implements EnemyFactory{
+    -time:int
+    -mode:int
     +createEnemy() : EliteEnemy
+    +adjust(int time): void
+    +setMode(int mode): void
 }
 class MobEnemyFactory implements EnemyFactory{
+    -time:int
+    -mode:int
     +createEnemy() : MobEnemy
+    +adjust(int time): void
+    +setMode(int mode): void
 }
 class EliteplusEnemyFactory implements EnemyFactory{
+    -time:int
+    -mode:int
     +createEnemy() : EliteplusEnemy
+    +adjust(int time): void
+    +setMode(int mode): void
 }
 class BossEnemyFactory implements EnemyFactory{
+    -time:int
+    -mode:int
     +createEnemy() : BossEnemy
+    +adjust(int time): void
+    +setMode(int mode): void
 }
 AbstractEnemy<..EnemyFactory
 EliteEnemy<.. EliteEnemyFactory:create

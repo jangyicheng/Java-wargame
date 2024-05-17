@@ -24,28 +24,28 @@ abstract class AbstractFlyingObject
     + getHeight():int
     + notValid():boolean
     + vanish():void
-}
+    }
 abstract class AbstractAircraft
 {
-	-maxHp: int
-        -hp: int
-        -power: int
-        -shootNum: int
-        -direction: int
-        -strategy: Strategy
-    	# maxHp:int
-        # hp:int
-        + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
-        + decreaseHp(int decrease):void
-        + getHp():int
-        + getMaxHp():int
-        + getShootnum():int
-        +getDirection():int
-        + getPower():int
-        + {abstract} shoot():List<BaseBullet>
-        + setStrategy(String str):void
+    -maxHp: int
+    -hp: int
+    -power: int
+    -shootNum: int
+    -direction: int
+    -strategy: Strategy
+	# maxHp:int
+    # hp:int
+    + AbstractAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
+    + decreaseHp(int decrease):void
+    + getHp():int
+    + getMaxHp():int
+    + getShootnum():int
+    +getDirection():int
+    + setMaxHp():void
+    + getPower():int
+    + {abstract} shoot():List<BaseBullet>
+    + setStrategy(String str):void
  }
-
 
 class HeroAircraft extends AbstractAircraft{
     - shootNum:int
@@ -63,36 +63,44 @@ class HeroAircraft extends AbstractAircraft{
 
 abstract class AbstractEnemy extends AbstractAircraft {
   - score: int
+      -mode:int
+      -time:int
+     + AbstractEnemy(int locationX, int locationY, int speedX, int speedY, int hp,int mode,int time)
   + {abstract}adjustspeed(): void
   + getScore(): int
   + {abstract} createprop():void
+  + {abstract} setMode(int mode):void
+  + {abstract} update():void
 }
 class EliteEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
     -{static}bombfactory: BombpropFactory
     -{static}bulletfactory: BulletpropFactory
     -{static}bulletplusfactory: BulletpluspropFactory
-  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int,int mode,int time)
   + forward(): void
   + shoot(): List<BaseBullet>
+    + update():void
 }
 class EliteplusEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
     -{static}bombfactory: BombpropFactory
     -{static}bulletfactory: BulletpropFactory
     -{static}bulletplusfactory: BulletpluspropFactory
-  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int,int mode,int time)
   + forward(): void
   + shoot(): List<BaseBullet>
+      + update():void
 }
 class MobEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
     -{static}bombfactory: BombpropFactory
     -{static}bulletfactory: BulletpropFactory
     -{static}bulletplusfactory: BulletpluspropFactory
-  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int,int mode,int time)
   + forward(): void
   + shoot(): List<BaseBullet>
+      + update():void
 }
 
 class BossEnemy extends AbstractEnemy{
@@ -100,9 +108,10 @@ class BossEnemy extends AbstractEnemy{
     -{static}bombfactory: BombpropFactory
     -{static}bulletfactory: BulletpropFactory
     -{static}bulletplusfactory: BulletpluspropFactory
-  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int)
+  + EliteEnemy(locationX: int, locationY: int, speedX: int, speedY: int, hp: int,int mode,int time)
   + forward(): void
   + shoot(): List<BaseBullet>
+      + update():void
 }
 abstract class BaseBullet
 {
@@ -111,12 +120,12 @@ abstract class BaseBullet
     + forward():void
 	+ getPower():int
 }
-class HeroBullet {
+class HeroBullet extends BaseBullet{
     + HeroBullet(int locationX, int locationY,
      int speedX, int speedY, int power)
 }
 
-class EnemyBullet {
+class EnemyBullet extends BaseBullet{
     + EnemyBullet(int locationX, int locationY,
      int speedX, int speedY, int power)
 }
@@ -129,39 +138,38 @@ abstract class Baseprop {
 }
 
 
-class Bloodprop {
+class Bloodprop extends Baseprop{
 - blood:int
 +Bloodprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void
 }
 
-class  Bombprop {
+class  Bombprop extends Baseprop{
+-observers:List<Observer>
 + Bombprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void
++registerObserver(Observer observer):void
++removeObserver(Observer observer):void
++notifyObserver():void
 }
 
-
-class  Bulletprop  {
+class  Bulletprop extends Baseprop{
+ -{static}control:int
 +  Bulletprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void
 }
 
 class  Bulletplusprop extends Baseprop{
+ -{static}control:int
 +  Bulletplusprop(int locationX, int locationY, int speedX, int speedY):void
 +forward():void
 +apply():void
 }
 
 AbstractFlyingObject <|-- Baseprop
-Baseprop <|-- Bloodprop
-Baseprop <|-- Bombprop
-Baseprop <|-- Bulletprop
-BaseBullet <|-- HeroBullet
-BaseBullet <|-- EnemyBullet
-
 AbstractFlyingObject <|-- AbstractAircraft
 AbstractFlyingObject <|-- BaseBullet
 

@@ -165,7 +165,6 @@ public class RankList implements DAO{
 
     public List<Record> getRankList()
     {
-        //Todo
         loadRecord();
         return this.ranklist;
     }
@@ -183,7 +182,6 @@ public class RankList implements DAO{
         writeRecord();
     }
 
-    @Override
     public void printRecord() {
         loadRecord();
         System.out.println("得分排行榜:");
@@ -204,7 +202,6 @@ public class RankList implements DAO{
     }
 
     public void sort(String by) {
-
         Comparator<Record> comparator;
         if(by.equals("id"))
             comparator=comparatorbyid;

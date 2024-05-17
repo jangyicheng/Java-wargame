@@ -26,7 +26,7 @@ public class Bombprop extends Baseprop{
     }
     public void removeObserver(Observer observer)
     {
-        this.observers.add(observer);
+        this.observers.remove(observer);
     }
     public void notifyObserver()
     {

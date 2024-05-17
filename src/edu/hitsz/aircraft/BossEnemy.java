@@ -17,15 +17,15 @@ public class BossEnemy extends AbstractEnemy {
     private static BombpropFactory bombfactory = new BombpropFactory();
     private static BulletpropFactory bulletfactory = new BulletpropFactory();
     private static BulletpluspropFactory bulletplusfactory = new BulletpluspropFactory();
-    public BossEnemy(int locationX, int locationY, int speedX, int speedY, int hp,int mode,int time) {
-        super(locationX, locationY, speedX, speedY, hp,mode,time);
+    public BossEnemy(int locationX, int locationY, int speedX, int speedY, int hp,int mode,int bosscount) {
+        super(locationX, locationY, speedX, speedY, hp,mode,bosscount);
         this.shootNum=20;
         this.power=5;
         this.score=500;
         this.direction=1;
         strategy=new CircularStrategy();
         setMode(mode);
-        enforce(time);
+        enforce(bosscount);
     }
 
     @Override
@@ -84,10 +84,10 @@ public class BossEnemy extends AbstractEnemy {
         }
         setMaxHp(this.hp);
     }
-    private void enforce(int time)
+    private void enforce(int bosscount)
     {
         //生命值提升
-        this.hp=Math.min(time/1000+this.hp,3000);
+        this.hp=Math.min(bosscount*500+this.hp,4000);
         setMaxHp(this.hp);
 
     }

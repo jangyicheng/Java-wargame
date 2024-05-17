@@ -70,10 +70,10 @@ public class EliteEnemy extends AbstractEnemy {
     private void enforce(int time)
     {
         //生命值提升
-        this.hp=Math.min(time/1000+this.hp,300);
+        this.hp=Math.min(time/4000+this.hp,300);
         setMaxHp(this.hp);
         //速度提升
-        this.speedY=Math.min(time/1000+this.speedY,8);
+        this.speedY=Math.min(time/4000+this.speedY,8);
 
     }
 

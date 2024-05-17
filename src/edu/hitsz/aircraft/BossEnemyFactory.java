@@ -5,7 +5,7 @@ import edu.hitsz.application.Main;
 
 public class BossEnemyFactory implements  EnemyFactory{
     private int mode;
-    private int time;
+    private int bosscount;
     public BossEnemyFactory()
     {}
     @Override
@@ -16,14 +16,14 @@ public class BossEnemyFactory implements  EnemyFactory{
                 0,
                 0,
                 2000,
-                mode,time
+                mode,bosscount
         );
 
         return bossEnemy;
     }
     public  void setMode(int mode){this.mode=mode;}
-    public  void adjust(int time)
+    public  void adjust(int bosscount)
     {
-        this.time=time;
+        this.bosscount=bosscount;
     }
 }

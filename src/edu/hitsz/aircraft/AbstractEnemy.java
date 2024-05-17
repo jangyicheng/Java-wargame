@@ -20,5 +20,7 @@ public abstract class AbstractEnemy extends AbstractAircraft  implements Observe
 
     public abstract void adjustspeed();
    public  abstract  void createprop(List<Baseprop> props);
+   public abstract void setMode(int mode);
+   public abstract void update();
 
 }

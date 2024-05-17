@@ -7,11 +7,11 @@ class DAOpatternDemo
 
 interface DAO
 {
-  +createRecord(userid: String, score: int): Record
-    +getRecordsById(userid: String): List<Record>
-    +updateRecord(record: Record): void
-    +deleteRecord(userid: String): void
-    +printRecord(): void
+  +createRecord(String userid , int score ): Record
+    +updateRecord(Record record): void
+    +getRecordsByHashcode(int hashcode): Record
+    +deleteRecordbyHashcode(int hashcode):void
+    +sort(String by):void
 }
 
 class RankList implements DAO
@@ -25,11 +25,11 @@ class RankList implements DAO
 - comparatorbyrank:Comparator<Record>
 
 +createRecord():Record
-+getRecordsById(String id):List<Record>
 +updateRecord(Record record):void
-+deleteRecord(String id):void
-+printRecord():void
++getRecordsByHashcode(int hashcode): Record
++deleteRecordbyHashcode(int hashcode):void
 +sort(String by):void
++getRankList():void
 -loadRecord():void
 -writeRecord():void
 -parseRecord():Record
@@ -41,6 +41,7 @@ class Record
     - userid:String
     - score:int
     -time:LocalDateTime
+    -hashcode:int
     -Record()
     +getRank(): int
     +setRank(rank: int): void
@@ -48,6 +49,7 @@ class Record
     +getScore(): int
     +setScore(score: int): void
     +getTime(): LocalDateTime
+    +getHashcode():int
 }
 DAO<.. DAOpatternDemo
  Record<-- RankList

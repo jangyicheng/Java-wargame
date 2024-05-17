@@ -2,9 +2,9 @@ package edu.hitsz.aircraft;
 
 public interface EnemyFactory {
 
-    public  AbstractEnemy createEnemy();
-    public  void adjust(int time);
-    public  void setMode(int mode);
+   AbstractEnemy createEnemy();
+    void adjust(int time);
+    void setMode(int mode);
 
 }
 
