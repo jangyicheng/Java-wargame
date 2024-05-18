@@ -33,6 +33,7 @@ abstract class AbstractEnemy extends AbstractAircraft implements Observer{
   + {abstract} createprop():void
   + {abstract} setMode(int mode):void
   + {abstract} update():void
+  + {abstract} enforce():void
 }
 
 class EliteEnemy extends AbstractEnemy {
@@ -44,6 +45,7 @@ class EliteEnemy extends AbstractEnemy {
   + forward(): void
   + shoot(): List<BaseBullet>
     + update():void
+    +enforce():void
 }
 class EliteplusEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
@@ -54,6 +56,7 @@ class EliteplusEnemy extends AbstractEnemy {
   + forward(): void
   + shoot(): List<BaseBullet>
       + update():void
+      +enforce():void
 }
 class MobEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
@@ -64,6 +67,7 @@ class MobEnemy extends AbstractEnemy {
   + forward(): void
   + shoot(): List<BaseBullet>
       + update():void
+      +enforce():void
 }
 
 class BossEnemy extends AbstractEnemy{
@@ -75,6 +79,7 @@ class BossEnemy extends AbstractEnemy{
   + forward(): void
   + shoot(): List<BaseBullet>
       + update():void
+          +enforce():void
 }
 
 interface EnemyFactory {

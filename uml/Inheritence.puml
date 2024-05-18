@@ -71,6 +71,7 @@ abstract class AbstractEnemy extends AbstractAircraft {
   + {abstract} createprop():void
   + {abstract} setMode(int mode):void
   + {abstract} update():void
+            +enforce():void
 }
 class EliteEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
@@ -81,6 +82,7 @@ class EliteEnemy extends AbstractEnemy {
   + forward(): void
   + shoot(): List<BaseBullet>
     + update():void
+              +enforce():void
 }
 class EliteplusEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
@@ -91,6 +93,7 @@ class EliteplusEnemy extends AbstractEnemy {
   + forward(): void
   + shoot(): List<BaseBullet>
       + update():void
+                +enforce():void
 }
 class MobEnemy extends AbstractEnemy {
     -{static}bloodfactory: BloodpropFactory
@@ -101,6 +104,7 @@ class MobEnemy extends AbstractEnemy {
   + forward(): void
   + shoot(): List<BaseBullet>
       + update():void
+                +enforce():void
 }
 
 class BossEnemy extends AbstractEnemy{
@@ -112,6 +116,7 @@ class BossEnemy extends AbstractEnemy{
   + forward(): void
   + shoot(): List<BaseBullet>
       + update():void
+                +enforce():void
 }
 abstract class BaseBullet
 {
@@ -128,6 +133,7 @@ class HeroBullet extends BaseBullet{
 class EnemyBullet extends BaseBullet{
     + EnemyBullet(int locationX, int locationY,
      int speedX, int speedY, int power)
+    + update():void
 }
 
 abstract class Baseprop {

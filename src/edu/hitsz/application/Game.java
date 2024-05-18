@@ -6,7 +6,6 @@ import edu.hitsz.aircraft.*;
 import edu.hitsz.aircraft.Observer;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
-import edu.hitsz.mode.Mode;
 import edu.hitsz.prop.*;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import javax.swing.*;
@@ -62,8 +61,7 @@ public abstract class Game extends JPanel {
      * 周期（ms)
      * 指示子弹的发射、敌机的产生频率
      */
-    //private int cycleDuration = 300;//600
-    protected Integer cycleDuration = 300;//600
+    protected int cycleDuration = 600;//600
     protected int cycleTime = 0;
     protected boolean bosswar = false;
     protected boolean gameOverFlag=false;
@@ -75,12 +73,11 @@ public abstract class Game extends JPanel {
     protected BufferedImage background=ImageManager.BACKGROUND_IMAGE1;
     MusicThread music;//=new MusicThread("src/videos/bgm.wav",2);
     MusicThread bgm_boss;//=new MusicThread("src/videos/bgm_boss.wav",2);
+    protected double eliteprob;
     protected double mobprob;
-    //private double eliteprob;
-    protected Double eliteprob;
     protected int bosscore;//boss出现的分数
     protected int bosscount=0;
-    protected Mode gamemode;
+
     public Game(Boolean sound) {
         heroAircraft = HeroAircraft.getInstance();
         enemyAircrafts = new LinkedList<>();
@@ -91,7 +88,6 @@ public abstract class Game extends JPanel {
         bgm_boss=new MusicThread("src/videos/bgm_boss.wav",2);
         Sound=sound;
         enemyMaxNumber=5;
-        bosscore=200;
         /**
          * Scheduled 线程池，用于定时任务调度
          * 关于alibaba code guide：可命名的 ThreadFactory 一般需要第三方包
@@ -108,7 +104,66 @@ public abstract class Game extends JPanel {
     /**
      * 游戏启动入口，执行游戏逻辑
      */
-    public abstract void action();
+    public void action() {
+
+        // 定时任务：绘制、对象产生、碰撞判定、击毁及结束判定
+        Runnable task = () -> {
+
+            time += timeInterval;
+            // 周期性执行（控制频率）
+            if (timeCountAndNewCycleJudge()) {
+                enforcEnemy();
+                adjustParam();
+                System.out.println(time);
+                // 新敌机产生
+                createEnemy();
+                // 飞机射出子弹
+                shootAction();
+            }
+
+            // 子弹移动
+            bulletsMoveAction();
+            // 飞机移动
+            aircraftsMoveAction();
+            // 横向移动
+            adjustspeed();
+            //道具移动
+            propsMoveAction();
+            // 撞击检测
+            crashCheckAction();
+            // 后处理
+            postProcessAction();
+            //每个时刻重绘界面
+            repaint();
+
+            // 游戏结束检查英雄机是否存活
+            if (heroAircraft.getHp() <= 0) {
+                // 游戏结束
+                music.pauseThread();
+                bgm_boss.pauseThread();
+                executorService.shutdown();
+                gameOverFlag = true;
+                System.out.println("Game Over!");
+                SwingUtilities.invokeLater(() -> {
+                    RankListGUI rankListGUI = new RankListGUI(3);
+                    rankListGUI.setVisible(true);
+                    rankListGUI.updateRecord(score);
+                });
+            }
+        };
+
+        /**
+         * 以固定延迟时间进行执行
+         * 本次任务执行完成后，需要延迟设定的延迟时间，才会执行新的任务
+         */
+        executorService.scheduleWithFixedDelay(task, timeInterval, timeInterval, TimeUnit.MILLISECONDS);
+        if(Sound) {
+            executorService.execute(music);
+            executorService.execute(bgm_boss);
+            bgm_boss.pauseThread();
+        }
+
+    }
     //***********************
     //      Action 各部分
     //***********************
@@ -153,28 +208,9 @@ public abstract class Game extends JPanel {
     }
     }
     //我添加的
-    protected  void createEnemy(){
-        Random random = new Random();
-        double rand = random.nextDouble();
-        if(tempscore>bosscore & bosswar==false & rand<0.2 & Mode!=1)
-        {   bosswar=true;
-            bosscount++;
-            tempscore=0;//清空临时分数
-            music.pauseThread();
-            bgm_boss.resumeThread();
-            enemyAircrafts.add(bossfactory.createEnemy());}
-        if (enemyAircrafts.size() < enemyMaxNumber) {
-            if(rand<eliteprob){
-                enemyAircrafts.add(mobfactory.createEnemy());
-            }
-            else if(rand>0.7){
-                enemyAircrafts.add(elitefactory.createEnemy());}
-            else
-            {enemyAircrafts.add(eliteplusfactory.createEnemy());}
-
-        }
-
-    }
+    protected abstract void enforcEnemy();
+    protected abstract void adjustParam();
+    protected  abstract void createEnemy();
     protected void adjustspeed(){
         for (AbstractEnemy enemyAircraft : enemyAircrafts) {
             if(enemyAircraft instanceof EliteplusEnemy||enemyAircraft instanceof BossEnemy)

@@ -1,22 +1,87 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-class Game
+abstract class Game
 {
-+{abstract} action():void
++action():void
++{abstract} createEnemy():void
++{abstract} enforcEnemy():void
++{abstract} adjustParam():void
 }
 class EasyGame extends Game
 {
++EasyGame(Boolean sound)
 +action():void
++createEnemy():void
++enforcEnemy():void
++adjustParam():void
 }
 class OrdinaryGame extends Game
 {
++EasyGame(Boolean sound)
 +action():void
++createEnemy():void
++enforcEnemy():void
++adjustParam():void
 }
 class HardGame extends Game
 {
++HardGame(Boolean sound)
 +action():void
++createEnemy():void
++enforcEnemy():void
++adjustParam():void
 }
 
+note left of EasyGame::action
+   protected void enforcEnemy()
+    {
+    }
+    protected void  adjustParam()
+    {
+    }
+end note
+note left of OrdinaryGame::action
+
+    protected void enforcEnemy()
+    {
+        if(time%1000==0)
+        {mobfactory.adjust(time);
+            elitefactory.adjust(time);
+            eliteplusfactory.adjust(time);
+            bossfactory.adjust(bosscount);
+
+        }
+    }
+    protected void  adjustParam()
+    {
+        double times;
+        enemyMaxNumber=Math.min(enemyMaxNumber+time/8000,7);
+        eliteprob=Math.min(eliteprob+(double)time/200000.0,0.7);
+        cycleDuration=Math.max(cycleDuration-time/100,400);
+        times=Math.min(5+(double)time/4000.0,8.0)/5.0;
+    }
+
+
+end note
+note left of HardGame::action
+    protected void enforcEnemy()
+    {
+        if(time%1000==0)
+        {mobfactory.adjust(time);
+            elitefactory.adjust(time);
+            eliteplusfactory.adjust(time);
+            bossfactory.adjust(bosscount);
+        }
+    }
+    protected void  adjustParam()
+    {
+        double times;
+        enemyMaxNumber=Math.min(enemyMaxNumber+time/8000,9);
+        eliteprob=Math.min(eliteprob+(double)time/200000.0,0.9);
+        cycleDuration=Math.max(cycleDuration-time/100,300);
+        times=Math.min(5+(double)time/4000.0,8.0)/5.0;
+    }
+end note
 
 @enduml

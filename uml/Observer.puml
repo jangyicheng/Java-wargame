@@ -48,6 +48,11 @@ class BossEnemy extends AbstractEnemy{
 class Game{
 }
 
+class EnemyBullet implements Observer{
+    + EnemyBullet(int locationX, int locationY,
+     int speedX, int speedY, int power)
+    + update():void
+}
 Game --> Bombprop
 Bombprop o--> Observer
 Game ..> MobEnemy

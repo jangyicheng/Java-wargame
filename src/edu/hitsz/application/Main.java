@@ -1,7 +1,6 @@
 package edu.hitsz.application;
 
 import edu.hitsz.DAO.RankListGUI;
-import edu.hitsz.mode.Mode;
 
 import javax.swing.*;
 import java.awt.*;
