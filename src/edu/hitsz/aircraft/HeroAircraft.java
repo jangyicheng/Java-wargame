@@ -31,7 +31,8 @@ public class HeroAircraft extends AbstractAircraft{
      * @param speedY 英雄机射出的子弹的基准速度（英雄机无特定速度）
      * @param hp    初始生命值
      */
-
+    public boolean Ischase=false;
+    public static boolean visible=true;
     private volatile static HeroAircraft instance;
 
     public  static synchronized HeroAircraft getInstance()
@@ -52,7 +53,7 @@ public class HeroAircraft extends AbstractAircraft{
     }
     private HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
-        shootNum = 5;
+        shootNum = 1;
         /**
          * 子弹伤害
          */

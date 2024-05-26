@@ -2,13 +2,9 @@ package edu.hitsz.aircraft;
 
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
-import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.prop.*;
-import edu.hitsz.strategy.CircularStrategy;
 import edu.hitsz.strategy.ScatterStrategy;
-import edu.hitsz.strategy.Strategy;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -19,6 +15,8 @@ public class EliteplusEnemy extends AbstractEnemy{
     private static BombpropFactory bombfactory = new BombpropFactory();
     private static BulletpropFactory bulletfactory = new BulletpropFactory();
     private static BulletpluspropFactory bulletplusfactory = new BulletpluspropFactory();
+    private static ChasepropFactory chasefactory = new ChasepropFactory();
+    private static InvisiblepropFactory invisiblefactory = new InvisiblepropFactory();
     public EliteplusEnemy(int locationX, int locationY, int speedX, int speedY, int hp,int mode,int time) {
         super(locationX, locationY, speedX, speedY, hp,mode,time);
         startx=locationX+40*(locationX< Main.WINDOW_HEIGHT*0.5?1:-1);
@@ -66,7 +64,12 @@ public class EliteplusEnemy extends AbstractEnemy{
             } else if (randouble < 0.8) {
                 bulletplusfactory.init(this);
                 props.add(bulletplusfactory.createprop());
-            }
+            }else if(randouble<0.9)
+            {   chasefactory.init(this);
+                props.add(chasefactory .createprop());}
+            else     {   invisiblefactory.init(this);
+                props.add(invisiblefactory .createprop());}
+
 
     }
     public void update()

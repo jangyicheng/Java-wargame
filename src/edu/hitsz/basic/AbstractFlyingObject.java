@@ -1,9 +1,11 @@
 package edu.hitsz.basic;
 
 import edu.hitsz.aircraft.AbstractAircraft;
+import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.aircraft.Observer;
 import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
+import edu.hitsz.prop.Baseprop;
 
 import java.awt.image.BufferedImage;
 
@@ -101,6 +103,14 @@ public abstract class AbstractFlyingObject{
      */
     public boolean crash(AbstractFlyingObject flyingObject) {
 
+        if(flyingObject instanceof HeroAircraft || this instanceof HeroAircraft)
+        {
+            if(HeroAircraft.visible==false)
+            {if(!(flyingObject instanceof Baseprop) && !(this instanceof Baseprop))
+                return false;
+            }
+
+        }
         // 缩放因子，用于控制 y轴方向区域范围
         int factor = this instanceof AbstractAircraft ? 2 : 1; //我方
         int fFactor = flyingObject instanceof AbstractAircraft ? 2 : 1;//对方

@@ -6,10 +6,16 @@ import edu.hitsz.aircraft.*;
 import edu.hitsz.aircraft.Observer;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
+import edu.hitsz.bullet.ChaseBullet;
 import edu.hitsz.prop.*;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
@@ -61,7 +67,7 @@ public abstract class Game extends JPanel {
      * 周期（ms)
      * 指示子弹的发射、敌机的产生频率
      */
-    protected int cycleDuration = 600;//600
+    protected int cycleDuration = 800;
     protected int cycleTime = 0;
     protected boolean bosswar = false;
     protected boolean gameOverFlag=false;
@@ -84,8 +90,8 @@ public abstract class Game extends JPanel {
         heroBullets = new LinkedList<>();
         enemyBullets = new LinkedList<>();
         props = new LinkedList<>();
-        music=new MusicThread("src/videos/bgm.wav",2);
-        bgm_boss=new MusicThread("src/videos/bgm_boss.wav",2);
+        music=new MusicThread("src/videos/bgm0.wav",2);
+        bgm_boss=new MusicThread("src/videos/bgm_boss0.wav",2);
         Sound=sound;
         enemyMaxNumber=5;
         /**
@@ -145,13 +151,12 @@ public abstract class Game extends JPanel {
                 gameOverFlag = true;
                 System.out.println("Game Over!");
                 SwingUtilities.invokeLater(() -> {
-                    RankListGUI rankListGUI = new RankListGUI(3);
+                    RankListGUI rankListGUI = new RankListGUI(Mode);
                     rankListGUI.setVisible(true);
                     rankListGUI.updateRecord(score);
                 });
             }
         };
-
         /**
          * 以固定延迟时间进行执行
          * 本次任务执行完成后，需要延迟设定的延迟时间，才会执行新的任务
@@ -162,6 +167,7 @@ public abstract class Game extends JPanel {
             executorService.execute(bgm_boss);
             bgm_boss.pauseThread();
         }
+
 
     }
     //***********************
@@ -181,14 +187,29 @@ public abstract class Game extends JPanel {
 
     protected void shootAction() {
         // TODO 敌机射击
-        for (AbstractAircraft enemy : enemyAircrafts) {
+        for (AbstractEnemy enemy : enemyAircrafts) {
             enemyBullets.addAll(enemy.shoot());}
             // 英雄射击
-          heroBullets.addAll(heroAircraft.shoot());
+        heroBullets.addAll(heroAircraft.shoot());
+        for(BaseBullet bullet : heroBullets)
+        {
+            if(bullet instanceof ChaseBullet)
+        {
+
+            for (AbstractEnemy enemy : enemyAircrafts){
+                ((ChaseBullet)bullet).removeObjects(enemy);
+                ((ChaseBullet)bullet).registerObjects(enemy);}
+        }
+        }
 
     }
     protected void bulletsMoveAction() {
         for (BaseBullet bullet : heroBullets) {
+            if(bullet instanceof ChaseBullet)
+            {
+
+                 ((ChaseBullet) bullet).chaseObjects();
+            }//调整速度方向
             bullet.forward();
         }
         for (BaseBullet bullet : enemyBullets) {
@@ -294,6 +315,7 @@ public abstract class Game extends JPanel {
                 {
                 ((Bombprop) prop).registerObserver(enemy);
                 }
+
             }
             if(prop.crash(heroAircraft)||heroAircraft.crash(prop))
             {
@@ -365,9 +387,12 @@ public abstract class Game extends JPanel {
         paintImageWithPositionRevised(g, heroBullets);
         paintImageWithPositionRevised(g, enemyAircrafts);
         paintImageWithPositionRevised(g, props);
-
-        g.drawImage(ImageManager.HERO_IMAGE, heroAircraft.getLocationX() - ImageManager.HERO_IMAGE.getWidth() / 2,
-                heroAircraft.getLocationY() - ImageManager.HERO_IMAGE.getHeight() / 2, null);
+        if(HeroAircraft.visible==true)
+        {g.drawImage(ImageManager.HERO_IMAGE, heroAircraft.getLocationX() - ImageManager.HERO_IMAGE.getWidth() / 2,
+                heroAircraft.getLocationY() - ImageManager.HERO_IMAGE.getHeight() / 2, null);}
+        else
+        {g.drawImage(ImageManager.HERO_INVISIBLE_IMAGE, heroAircraft.getLocationX() - ImageManager.HERO_IMAGE.getWidth() / 2,
+                heroAircraft.getLocationY() - ImageManager.HERO_IMAGE.getHeight() / 2, null);}
         for (AbstractEnemy enemy:enemyAircrafts)
         {
             BufferedImage image = enemy.getImage();
@@ -390,28 +415,62 @@ public abstract class Game extends JPanel {
                 g.setColor(Color.GREEN);
             }
             g.fillRect(barX, barY, barFillWidth, barHeight);
+            Font font = new Font("Arial", Font.PLAIN, 12);
+            g.setFont(font);
+            String healthText = String.valueOf(enemy.getHp()) + "/" + String.valueOf(enemy.getMaxHp());
+            int textX = enemy.getLocationX() - ImageManager.HERO_IMAGE.getWidth() / 2;
+            int textY = enemy.getLocationY() - image.getHeight() / 2 - barHeight - 5; // 血条上方一段距离
+            g.drawString(healthText, textX, textY);
         }
         //绘制得分和生命值
         paintScoreAndLife(g);
 
     }
 
-    //绘制每一帧的飞行物体
+
+
     protected void paintImageWithPositionRevised(Graphics g, List<? extends AbstractFlyingObject> objects) {
         if (objects.size() == 0) {
             return;
         }
 
+        Graphics2D g2d = (Graphics2D) g;
+
         for (AbstractFlyingObject object : objects) {
             BufferedImage image = object.getImage();
             assert image != null : objects.getClass().getName() + " has no image! ";
-            g.drawImage(image, object.getLocationX() - image.getWidth() / 2,
+            if(object instanceof BaseBullet)
+            {int imageWidth = image.getWidth();
+            int imageHeight = image.getHeight();
+            int objectX = object.getLocationX();
+            int objectY = object.getLocationY();
+            int speedX = object.getSpeedX();
+            int speedY = object.getSpeedY();
+
+            // 计算旋转角度
+            double angle = Math.atan2(speedY, speedX);
+
+            // 创建变换对象
+            AffineTransform transform = new AffineTransform();
+            // 移动到对象的中心位置
+            transform.translate(objectX, objectY);
+            // 旋转图像
+            transform.rotate(angle);
+            // 将图像移动到正确的位置
+            transform.translate(-imageWidth / 2.0, -imageHeight / 2.0);
+            ////////
+            angle = Math.atan2(speedY, speedX) - Math.PI / 2;
+
+            transform = new AffineTransform();
+            transform.translate(objectX, objectY);
+            transform.rotate(angle);
+            // 绘制旋转后的图像
+            g2d.drawImage(image, transform, null);}
+            else
+                g.drawImage(image, object.getLocationX() - image.getWidth() / 2,
                     object.getLocationY() - image.getHeight() / 2, null);
-
         }
-
     }
-
 
     protected void paintScoreAndLife(Graphics g) {
         int x = 10;

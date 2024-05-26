@@ -2,7 +2,9 @@ package edu.hitsz.strategy;
 
 import edu.hitsz.aircraft.AbstractAircraft;
 import edu.hitsz.aircraft.AbstractEnemy;
+import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.bullet.BaseBullet;
+import edu.hitsz.bullet.ChaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.bullet.HeroBullet;
 
@@ -36,8 +38,10 @@ public class ScatterStrategy implements Strategy{
             speedY =(int)(speed*Math.sin(angle[i]));
             if(aircraft instanceof AbstractEnemy)
             bullet = new EnemyBullet(x , y, speedX, speedY, power);
-            else
+            else if(((HeroAircraft)aircraft).Ischase==false)
             { bullet = new HeroBullet(x , y, speedX, -speedY, power);}
+            else
+                bullet= new ChaseBullet(x , y, speedX, -speedY, power);
             res.add(bullet);
         }
         return res;

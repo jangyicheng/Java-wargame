@@ -6,12 +6,10 @@ import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.aircraft.MobEnemy;
 import edu.hitsz.aircraft.EliteplusEnemy;
 import edu.hitsz.aircraft.BossEnemy;
+import edu.hitsz.bullet.ChaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.bullet.HeroBullet;
-import edu.hitsz.prop.Bloodprop;
-import edu.hitsz.prop.Bombprop;
-import edu.hitsz.prop.Bulletplusprop;
-import edu.hitsz.prop.Bulletprop;
+import edu.hitsz.prop.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -39,7 +37,9 @@ public class ImageManager {
     public static BufferedImage BACKGROUND_IMAGE2;
     public static BufferedImage BACKGROUND_IMAGE3;
     public static BufferedImage HERO_IMAGE;
+    public static BufferedImage HERO_INVISIBLE_IMAGE;
     public static BufferedImage HERO_BULLET_IMAGE;
+    public static BufferedImage CHASE_BULLET_IMAGE;
     public static BufferedImage ENEMY_BULLET_IMAGE;
     public static BufferedImage MOB_ENEMY_IMAGE;
     public static BufferedImage ELITE_ENEMY_IMAGE;
@@ -49,6 +49,8 @@ public class ImageManager {
     public static BufferedImage BOMB_PROP_IMAGE;
     public static BufferedImage BLOOD_PROP_IMAGE;
     public static BufferedImage BULLET_PLUS_PROP_IMAGE;
+    public static BufferedImage CHASE_PROP_IMAGE;
+    public static BufferedImage INVISIBLE_PROP_IMAGE;
     static {
         try {
 
@@ -56,21 +58,26 @@ public class ImageManager {
             BACKGROUND_IMAGE2 = ImageIO.read(new FileInputStream("src/images/bg4.jpg"));
             BACKGROUND_IMAGE3 = ImageIO.read(new FileInputStream("src/images/bg5.jpg"));
             HERO_IMAGE = ImageIO.read(new FileInputStream("src/images/hero.png"));
+            HERO_INVISIBLE_IMAGE = ImageIO.read(new FileInputStream("src/images/hero_invisible.png"));
             MOB_ENEMY_IMAGE = ImageIO.read(new FileInputStream("src/images/mob.png"));
             ELITE_ENEMY_IMAGE = ImageIO.read(new FileInputStream("src/images/elite.png"));
             ELITE_PLUS_IMAGE= ImageIO.read(new FileInputStream("src/images/elitePlus.png"));
             BOSS_ENEMY_IMAGE = ImageIO.read(new FileInputStream("src/images/boss.png"));
             BULLET_PROP_IMAGE = ImageIO.read(new FileInputStream("src/images/prop_bullet.png"));
             BULLET_PLUS_PROP_IMAGE = ImageIO.read(new FileInputStream("src/images/prop_bulletplus.png"));
+            CHASE_PROP_IMAGE = ImageIO.read(new FileInputStream("src/images/prop_chase.png"));
             BOMB_PROP_IMAGE = ImageIO.read(new FileInputStream("src/images/prop_bomb.png"));
             BLOOD_PROP_IMAGE = ImageIO.read(new FileInputStream("src/images/prop_blood.png"));
+            INVISIBLE_PROP_IMAGE= ImageIO.read(new FileInputStream("src/images/prop_invisible.png"));
             HERO_BULLET_IMAGE = ImageIO.read(new FileInputStream("src/images/bullet_hero.png"));
+            CHASE_BULLET_IMAGE = ImageIO.read(new FileInputStream("src/images/bullet_chase.png"));
             ENEMY_BULLET_IMAGE = ImageIO.read(new FileInputStream("src/images/bullet_enemy.png"));
 
 
             CLASSNAME_IMAGE_MAP.put(HeroAircraft.class.getName(), HERO_IMAGE);
             CLASSNAME_IMAGE_MAP.put(MobEnemy.class.getName(), MOB_ENEMY_IMAGE);
             CLASSNAME_IMAGE_MAP.put(HeroBullet.class.getName(), HERO_BULLET_IMAGE);
+            CLASSNAME_IMAGE_MAP.put(ChaseBullet.class.getName(), CHASE_BULLET_IMAGE);
             CLASSNAME_IMAGE_MAP.put(EnemyBullet.class.getName(), ENEMY_BULLET_IMAGE);
             CLASSNAME_IMAGE_MAP.put(EliteEnemy.class.getName(), ELITE_ENEMY_IMAGE);
             CLASSNAME_IMAGE_MAP.put(EliteplusEnemy.class.getName(), ELITE_PLUS_IMAGE);
@@ -79,6 +86,8 @@ public class ImageManager {
             CLASSNAME_IMAGE_MAP.put(Bombprop.class.getName(), BOMB_PROP_IMAGE);
             CLASSNAME_IMAGE_MAP.put(Bulletprop.class.getName(), BULLET_PROP_IMAGE);
             CLASSNAME_IMAGE_MAP.put(Bulletplusprop.class.getName(), BULLET_PLUS_PROP_IMAGE);
+            CLASSNAME_IMAGE_MAP.put(Chaseprop.class.getName(), CHASE_PROP_IMAGE);
+            CLASSNAME_IMAGE_MAP.put(Invisibleprop.class.getName(),  INVISIBLE_PROP_IMAGE);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);

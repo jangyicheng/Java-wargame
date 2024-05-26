@@ -6,6 +6,7 @@ import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.prop.*;
 import edu.hitsz.strategy.CircularStrategy;
 import edu.hitsz.strategy.Strategy;
+import edu.hitsz.strategy.WindMillStrategy;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +24,8 @@ public class BossEnemy extends AbstractEnemy {
         this.power=5;
         this.score=500;
         this.direction=1;
-        strategy=new CircularStrategy();
+        //strategy=new CircularStrategy();
+        strategy=new WindMillStrategy();
         setMode(mode);
         enforce(bosscount);
     }
@@ -87,7 +89,7 @@ public class BossEnemy extends AbstractEnemy {
     private void enforce(int bosscount)
     {
         //生命值提升
-        this.hp=Math.min(bosscount*500+this.hp,4000);
+        this.hp=Math.min(bosscount*500+this.hp,40000);
         setMaxHp(this.hp);
 
     }

@@ -15,7 +15,7 @@ public class BossEnemyFactory implements  EnemyFactory{
                 (int) (  Main.WINDOW_HEIGHT * 0.2),
                 0,
                 0,
-                2000,
+                20000,
                 mode,bosscount
         );
 

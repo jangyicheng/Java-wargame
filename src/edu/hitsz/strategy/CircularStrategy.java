@@ -2,7 +2,9 @@ package edu.hitsz.strategy;
 
 import edu.hitsz.aircraft.AbstractAircraft;
 import edu.hitsz.aircraft.AbstractEnemy;
+import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.bullet.BaseBullet;
+import edu.hitsz.bullet.ChaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.bullet.HeroBullet;
 
@@ -28,7 +30,6 @@ public class CircularStrategy implements Strategy{
         int speedy;
         BaseBullet bullet;
         double[] angle = new double[shootNum];
-
         for (int i = 0; i < shootNum; i++) {
             angle[i] = i / (double) (shootNum) * 2 * Math.PI;
         }
@@ -37,11 +38,12 @@ public class CircularStrategy implements Strategy{
             // 多个子弹横向分散
             speedx = (int) (speed * Math.cos(angle[i]));
             speedy = (int) (speed * Math.sin(angle[i]));
-
             if(aircraft instanceof AbstractEnemy)
                 bullet = new EnemyBullet(x , y, speedx, speedy, power);
-            else
+            else if(((HeroAircraft)aircraft).Ischase==false)
             { bullet = new HeroBullet(x , y, speedx, -speedy, power);}
+            else
+                bullet= new ChaseBullet(x , y, speedx, -speedy, power);
             res.add(bullet);
         }
         return res;

@@ -18,6 +18,7 @@ public class EliteEnemy extends AbstractEnemy {
     private static BombpropFactory bombfactory = new BombpropFactory();
     private static BulletpropFactory bulletfactory = new BulletpropFactory();
     private static BulletpluspropFactory bulletplusfactory = new BulletpluspropFactory();
+    private static ChasepropFactory chasefactory = new ChasepropFactory();
     public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp,int mode,int time) {
         super(locationX, locationY, speedX, speedY, hp,mode,time);
         shootNum= 1;
@@ -62,6 +63,10 @@ public class EliteEnemy extends AbstractEnemy {
             bulletplusfactory.init(this);
             props.add(bulletplusfactory.createprop());
         }
+        else if(randouble < 0.5)
+        {   chasefactory.init(this);
+            props.add(chasefactory .createprop());}
+
     }
     public void update()
     {
